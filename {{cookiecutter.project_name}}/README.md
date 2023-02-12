@@ -1,71 +1,62 @@
+<a href="https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}"><img src="https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/blob/main/docs/_static/icon.png?raw=true" width="100" align="right"/></a>
+
 # {{ cookiecutter.friendly_name }}
 
 [![PyPI](https://img.shields.io/pypi/v/{{cookiecutter.project_name}}.svg)][pypi status]
-[![Status](https://img.shields.io/pypi/status/{{cookiecutter.project_name}}.svg)][pypi status]
 [![Python Version](https://img.shields.io/pypi/pyversions/{{cookiecutter.project_name}})][pypi status]
-[![License](https://img.shields.io/pypi/l/{{cookiecutter.project_name}})][license]
+[![documentation](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/documentation/badge.svg)][documentation]
+[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/tests/badge.svg)][tests]
 
-[![Read the documentation at https://{{cookiecutter.project_name}}.readthedocs.io/](https://img.shields.io/readthedocs/{{cookiecutter.project_name}}/latest.svg?label=Read%20the%20Docs)][read the docs]
-[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/Tests/badge.svg)][tests]
-[![Codecov](https://codecov.io/gh/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/branch/main/graph/badge.svg)][codecov]
-
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
 [pypi status]: https://pypi.org/project/{{cookiecutter.project_name}}/
-[read the docs]: https://{{cookiecutter.project_name}}.readthedocs.io/
+[documentation]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/
 [tests]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions?workflow=Tests
-[codecov]: https://app.codecov.io/gh/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}
-[pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-## Features
-
-- TODO
-
-## Requirements
-
-- TODO
+TODO: Add a short description of the project.
 
 ## Installation
 
 You can install _{{cookiecutter.friendly_name}}_ via [pip] from [PyPI]:
 
-```console
-$ pip install {{cookiecutter.project_name}}
+```bash
+pip install {{cookiecutter.project_name}}
 ```
 
 ## Usage
 
-Please see the [Command-line Reference] for details.
+TODO: Add minimal usage example
 
-## Contributing
+To see more examples, see the [documentation].
 
-Contributions are very welcome.
-To learn more, see the [Contributor Guide].
+# 📖 Documentation
 
-## License
+| Documentation         |                                                  |
+| --------------------- | ------------------------------------------------ |
+| 🔧 **[Installation]**  | Installation instructions for using this package |
+| 📖 **[Documentation]** | A minimal and developing documentation           |
+| 👩‍💻 **[Tutorials]**     | Tutorials for using this package                 |
+| 🎛️ **[API Reference]** | API reference for this package                   |
+| 📚 **[FAQ]**           | Frequently asked questions                       |
 
-Distributed under the terms of the [{{cookiecutter.license.replace("-", " ")}} license][license],
-_{{cookiecutter.friendly_name}}_ is free and open source software.
 
-## Issues
+# 💬 Where to ask questions
 
-If you encounter any problems,
-please [file an issue] along with a detailed description.
+| Type                           |                        |
+| ------------------------------ | ---------------------- |
+| 📚 **FAQ**                      | [FAQ]                  |
+| 🚨 **Bug Reports**              | [GitHub Issue Tracker] |
+| 🎁 **Feature Requests & Ideas** | [GitHub Issue Tracker] |
+| 👩‍💻 **Usage Questions**          | [GitHub Discussions]   |
+| 🗯 **General Discussion**       | [GitHub Discussions]   |
 
-## Credits
+[Documentation]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/index.html
+[Installation]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/installation.html
+[Tutorials]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/tutorials.html
+[API Reference]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/references.html
+[FAQ]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/faq.html
+[github issue tracker]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/issues
+[github discussions]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}/discussions
 
-This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
 
-[@cjolowicz]: https://github.com/cjolowicz
-[pypi]: https://pypi.org/
-[hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
-[file an issue]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/issues
-[pip]: https://pip.pypa.io/
-
-<!-- github-only -->
-
-[license]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/blob/main/LICENSE
-[contributor guide]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/blob/main/CONTRIBUTING.md
-[command-line reference]: https://{{cookiecutter.project_name}}.readthedocs.io/en/latest/usage.html
