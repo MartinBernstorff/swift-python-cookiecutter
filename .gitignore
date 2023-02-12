@@ -1,0 +1,8 @@
+# Documentation 
+/docs/_build/
+
+# Python
+__pycache__/
+
+# MacOS
+.DS_Store

@@ -1,0 +1,17 @@
+# Configuration: https://dependabot.com/docs/config-file/
+# Docs: https://docs.github.com/en/github/administering-a-repository/keeping-your-dependencies-updated-automatically
+
+version: 2
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "monthly" # to reduce the number of PRs
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: ":arrow_up:"
+
+# With the automerge enabled we do not recommend automatic updates of github actions
+# as these are not tested and can break your workflow.
