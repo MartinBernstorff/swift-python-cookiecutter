@@ -57,6 +57,6 @@ To see more examples, see the [documentation].
 [API Reference]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/references.html
 [FAQ]: https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/faq.html
 [github issue tracker]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/issues
-[github discussions]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}/discussions
+[github discussions]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/discussions
 
 
