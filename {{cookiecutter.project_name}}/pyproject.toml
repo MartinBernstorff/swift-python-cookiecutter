@@ -62,30 +62,9 @@ tutorials = [
 file = "README.md"
 content-type = "text/markdown"
 
-
 [build-system]
 requires = ["setuptools>=61.0.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
-
-
-[tool.coverage.run]
-omit = [
-    "**/tests/*",
-]
-
-exclude_lines = [
-    "pragma: no cover",
-    # Don't complain about missing debug-only code:
-    "def __unicode__",
-    "def __repr__",
-    "if self.debug",
-    # Don't complain if tests don't hit defensive assertion code:
-    "raise AssertionError",
-    "raise NotImplementedError",
-    # Don't complain if non-runnable code isn't run:
-    "if 0:",
-    "if __name__ == .__main__.:",
-]
 
 [tool.setuptools]
 include-package-data = true
