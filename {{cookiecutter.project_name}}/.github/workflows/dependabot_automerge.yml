@@ -1,7 +1,6 @@
 # GitHub action to automerge dependabot PRs. Only merges if tests passes the
 # branch protections in the repository settings.
 # You can set branch protections in the repository under Settings > Branches > Add rule
-
 name: automerge-bot-prs
 
 on: pull_request
