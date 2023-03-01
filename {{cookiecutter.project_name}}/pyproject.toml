@@ -35,7 +35,6 @@ dev = [
     "cruft",
     "black==22.12.0",
     "pre-commit==2.20.0,<2.21.0",
-    "ruff==0.0.191",
     "mypy==0.991"
 ]
 
@@ -112,11 +111,3 @@ build_command = "python -m pip install build; python -m build"
 [tool.mypy]
 ignore_missing_imports = true
 no_implicit_optional = true
-
-[tool.ruff]
-exclude = [
-    ".venv",
-    ".env",
-    ".git",
-    "__pycache__",
-]
