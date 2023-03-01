@@ -12,13 +12,12 @@ classifiers = [
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
 ]
 
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     # add you dependencies here (e.g. "numpy>=1.20.0,<1.21.0")
 ]
@@ -89,16 +88,27 @@ exclude_lines = [
 [tool.setuptools]
 include-package-data = true
 
-[tool.mypy]
-ignore_missing_imports = true
-no_implicit_optional = true
+[tool.pylint]
+load-plugins = "pylint.extensions.docparams,pylint.extensions.code_style,pylint.extensions.for_any_all,pylint.extensions.typing"
+good-names = "df,p,f,d,e,n,k,i,v"
+disable = "too-many-lines,line-too-long,missing-raises-doc,no-self-argument,unused-wildcard-import,wildcard-import,no-else-return,too-many-arguments,redefined-outer-name,c-extension-no-member,wrong-import-order,logging-fstring-interpolation,unused-import,deprecated-typing-alias"
+ignore-paths = ['docs/*']
+
+[tool.isort]
+known_third_party = ["wandb"]
 
 [tool.semantic_release]
 branch = "main"
 version_variable = [
     "pyproject.toml:version"
 ]
+upload_to_pypi = false
+upload_to_release = false
 build_command = "python -m pip install build; python -m build"
+
+[tool.mypy]
+ignore_missing_imports = true
+no_implicit_optional = true
 
 [tool.ruff]
 exclude = [
