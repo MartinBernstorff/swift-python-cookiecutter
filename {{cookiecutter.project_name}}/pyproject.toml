@@ -7,7 +7,6 @@ authors = [
 description = "{{cookiecutter.friendly_name}}"
 
 classifiers = [
-    "{{cookiecutter.development_status}}",
     "Operating System :: POSIX :: Linux",
     "Operating System :: MacOS :: MacOS X",
     "Operating System :: Microsoft :: Windows",
