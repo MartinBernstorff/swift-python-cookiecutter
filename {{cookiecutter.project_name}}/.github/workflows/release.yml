@@ -1,9 +1,10 @@
-# This workflow will 
+# This workflow will
 # 1) Update the version number in pyproject.toml based on the commit history
-# 2) Create a git tag 
+# 2) Create a git tag
 # 3) Create a release on GitHub
 # 4) Upload the package to PyPI
 
+#{% raw %}
 name: Release
 on:
   push:
@@ -33,3 +34,4 @@ jobs:
           # 3) Uncomment the two lines below
           repository_username: __token__
           repository_password: ${{ secrets.PYPI_API_TOKEN }}
+#{% endraw %}
