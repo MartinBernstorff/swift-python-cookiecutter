@@ -25,4 +25,4 @@ jobs:
         run: pip install cruft
 
       - name: Run Cruft Check
-        run: cruft diff --exit-code 0
+        run: cruft check
