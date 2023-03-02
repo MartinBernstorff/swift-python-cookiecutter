@@ -37,25 +37,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           # Assumes the package have the tests extra
-          pip install ".[tests,all,da]"
-          # if there is a ./tests/requirements.txt file then install it
-          if [ -f ./tests/requirements.txt ]; then
-            pip install -r ./tests/requirements.txt
-          fi
+          pip install -e ".[tests]"
 
       - name: Run and write pytest
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
         shell: bash
         run: |
           set -o pipefail
-          pytest --cov=. --cov-report term-missing | tee pytest-coverage.txt
+          pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src/ tests/ | tee pytest-coverage.txt
 
       # if it is run on ubuntu-latest, python 3.9, then create the badge
       - name: Pytest coverage comment
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
         id: coverage-comment
-        uses: MishaKav/pytest-coverage-comment@v1.1.39
+        uses: MishaKav/pytest-coverage-comment@main
         with:
-          pytest-coverage-path: ./pytest-coverage.txt
+          create-new-comment: false
+          report-only-changed-files: true
+          pytest-coverage-path: pytest-coverage.txt
+          junitxml-path: ./pytest.xml
 
       - name: Check the output coverage
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
