@@ -27,16 +27,25 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v4
+        id: setup_python
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
           cache-dependency-path: "**/pyproject.toml"
 
+      - name: Cache venv
+        uses: actions/cache@v3.2.6
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-${{ steps.setup_python.python-version }}-venv-${{ hashFiles('**/pyproject.toml') }}
+
       - name: Install dependencies
         shell: bash
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
-          # Assumes the package have the tests extra
           pip install -e ".[tests]"
 
       - name: Run and write pytest
@@ -44,6 +53,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
+          source .venv/bin/activate
           pytest --junitxml=pytest.xml --cov-report=term-missing --cov=src/ tests/ | tee pytest-coverage.txt
 
       # if it is run on ubuntu-latest, python 3.9, then create the badge
