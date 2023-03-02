@@ -33,6 +33,7 @@ documentation = "https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.p
 [project.optional-dependencies]
 dev = [
     "cruft",
+    "ruff",
     "black==22.12.0",
     "pre-commit==2.20.0,<2.21.0",
     "mypy==0.991"
