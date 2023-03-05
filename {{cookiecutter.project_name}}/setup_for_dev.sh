@@ -1,4 +1,12 @@
-python -m venv .venv
+# Check if Python 3.11 is installed
+if command -v python3.11 &> /dev/null; then
+    # Python 3.11 is installed, use it to run the script
+    python3.11 -m venv .venv
+else
+    # Python 3.11 is not installed, use the default Python version
+    python -m venv .venv
+fi
+
 source .venv/bin/activate
 
 # If no commits exist, initialise the repo
