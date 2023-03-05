@@ -1,8 +1,12 @@
-# Documentation 
-/docs/_build/
-
 # Python
+.mypy_cache/
+/.python-version
+/.pytype/
+/dist/
+/docs/_build/
+/src/*.egg-info/
 __pycache__/
+.venv
 
 # MacOS
 .DS_Store
