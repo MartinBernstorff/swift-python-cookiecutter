@@ -161,6 +161,9 @@ max-complexity = 10
 [tool.ruff.isort]
 known-third-party = ["wandb"]
 
+[tool.ruff.flake8-annotations]
+mypy-init-return = true
+
 [tool.mypy]
 ignore_missing_imports = true
 no_implicit_optional = true
