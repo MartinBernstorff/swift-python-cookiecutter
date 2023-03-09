@@ -163,6 +163,7 @@ known-third-party = ["wandb"]
 
 [tool.ruff.flake8-annotations]
 mypy-init-return = true
+suppress-none-returning = true
 
 [tool.mypy]
 ignore_missing_imports = true
