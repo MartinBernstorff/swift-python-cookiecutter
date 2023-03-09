@@ -119,6 +119,7 @@ select = [
     "W"
 ]
 ignore = [
+    "ANN101",
     "E402", 
     "E501", 
     "RET504"
