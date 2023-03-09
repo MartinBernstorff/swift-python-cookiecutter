@@ -120,6 +120,7 @@ select = [
     "PTH", 
     "RSE", 
     "RET", 
+    "RUF",
     "SIM", 
     "W"
 ]
