@@ -98,6 +98,7 @@ plugins = "pydantic.mypy"
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 select = [
     "A", 
+    "ANN",
     "ARG", 
     "B", 
     "C4", 
