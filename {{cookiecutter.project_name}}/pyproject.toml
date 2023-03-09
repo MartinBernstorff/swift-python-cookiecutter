@@ -93,7 +93,7 @@ build_command = "python -m pip install build; python -m build"
 [tool.mypy]
 ignore_missing_imports = true
 no_implicit_optional = true
-plugins = pydantic.mypy, 
+plugins = "pydantic.mypy"
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
