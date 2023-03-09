@@ -83,11 +83,6 @@ upload_to_pypi = false
 upload_to_release = false
 build_command = "python -m pip install build; python -m build"
 
-[tool.mypy]
-ignore_missing_imports = true
-no_implicit_optional = true
-plugins = "pydantic.mypy"
-
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
 select = [
@@ -120,6 +115,7 @@ select = [
 ]
 ignore = [
     "ANN101",
+    "ANN401",
     "E402", 
     "E501", 
     "RET504"
@@ -164,3 +160,11 @@ max-complexity = 10
 
 [tool.ruff.isort]
 known-third-party = ["wandb"]
+
+[tool.mypy]
+ignore_missing_imports = true
+no_implicit_optional = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+warn_unreachable = true
+plugins = "pydantic.mypy"
