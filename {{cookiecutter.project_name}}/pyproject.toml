@@ -172,4 +172,3 @@ ignore_missing_imports = true
 no_implicit_optional = true
 warn_unused_ignores = true
 warn_unreachable = true
-plugins = "pydantic.mypy"
