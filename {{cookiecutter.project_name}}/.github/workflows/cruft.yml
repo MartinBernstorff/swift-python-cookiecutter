@@ -52,7 +52,7 @@ jobs:
             ✨ There is a newer version of continuous integration files or other tooling available ✨
 
             Feel free to either:
-            🥳 Keep up the good work or
+            😎 Keep up the good work and ignore this comment or
             🧠 If you're feeling extra helpful, run `cruft update` and merge in the updates
 
       - uses: mshick/add-pr-comment@v2
