@@ -35,6 +35,15 @@ jobs:
             echo "{cruft_failed}=1" >> $GITHUB_OUTPUT
             exit 0
           fi
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: find_comment
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: "github-actions[bot]"
+          body-includes: Cruft check failed.
+
       - uses: mshick/add-pr-comment@v2
         if: ${{ steps.cruft_check.outputs.cruft_failed }} == '1'
         with:
@@ -46,3 +55,9 @@ jobs:
             Feel free to either:
             🤖 Keep up the good work and ignore this message 
             🧠 If you're feeling extra helpful, run `cruft update` and merge in the updates
+
+      - uses: mshick/add-pr-comment@v2
+        if: ${{ steps.cruft_check.outputs.cruft_failed }} == '0' && steps.find_comment.outputs.comment-id != ''
+        with:
+          message: |
+            🌟 Cruft has been updated, thanks a lot! 🌟
