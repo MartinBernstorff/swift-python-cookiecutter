@@ -43,6 +43,6 @@ jobs:
 
             This means that there's a newer version of contious integration files or other tooling in the template this project was generated from.
 
-            Feel free to either
+            Feel free to either:
             🤖 Keep up the good work and ignore this message 
             🧠 If you're feeling extra helpful, run `cruft update` and merge in the updates
