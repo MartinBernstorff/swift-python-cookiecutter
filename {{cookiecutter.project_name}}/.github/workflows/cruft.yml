@@ -37,20 +37,18 @@ jobs:
           fi
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.cruft_check.outputs.cruft_failed }} == '1'
+        if: ${{ steps.cruft_check.outputs.cruft_failed  == 1}}
         id: add_comment
         with:
           message: |
-            ✨ Cruft check failed. ✨
-
-            This means that there's a newer version of contious integration files or other tooling in the template this project was generated from.
+            ✨ There is a newer version of contious integration files or other tooling available ✨
 
             Feel free to either:
-            🤖 Keep up the good work and ignore this message 
+            🥳 Keep up the good work or
             🧠 If you're feeling extra helpful, run `cruft update` and merge in the updates
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.cruft_check.outputs.cruft_failed }} == '0' && ${{ steps.add_comment.outputs.comment-updated }} == 'true'
+        if: ${{ steps.cruft_check.outputs.cruft_failed  == 0 && steps.add_comment.outputs.comment-updated == true}}
         with:
           message: |
             🌟 Cruft has been updated, thanks a lot! 🌟
