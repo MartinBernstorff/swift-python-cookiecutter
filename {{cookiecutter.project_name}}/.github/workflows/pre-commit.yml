@@ -5,6 +5,8 @@ name: run-pre-commit
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   pre-commit:
@@ -38,6 +40,7 @@ jobs:
       - name: Find Comment
         uses: peter-evans/find-comment@v2
         id: find_comment
+        if: ${{github.event_name == 'pull_request'}}
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "github-actions[bot]"
@@ -45,7 +48,7 @@ jobs:
           continue-on-error: true
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ failure() }}
+        if: ${{ failure() && github.event_name == 'pull_request'}}
         id: add_comment
         with:
           message: |
@@ -58,7 +61,7 @@ jobs:
             After installing pre-commit hooks, they will run automatically in the future when you run `git push`.
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.pre_commit.outputs.pre_commit_failed == 0 && steps.find_comment.outputs.comment-id != ''}}
+        if: ${{ steps.mypy.outputs.mypy_failed == 0 && steps.find_comment.outputs.comment-id != '' && github.event_name == 'pull_request'}}
         with:
           message-id: ${{ steps.find_comment.outputs.comment-id }}
           message: |
