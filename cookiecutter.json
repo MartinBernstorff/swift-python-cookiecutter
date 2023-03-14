@@ -8,7 +8,8 @@
   "version": "0.0.0",
   "copyright_year": "2023",
   "license": ["MIT", "None"],
-  "setup_for_dev": ["MIT", "None"],
+  "cookiecutter.setup_for_dev_bash_script": ["y", "n"],
+  "license": ["MIT", "None"],
   "_copy_without_render": [
     "*.github"
   ]
