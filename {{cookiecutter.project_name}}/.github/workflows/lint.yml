@@ -1,7 +1,12 @@
+# We do not include mypy as a pre-commit hook because pre-commit hooks
+# are installed in their own virtual environment, so mypy cannot
+# use stubs from imports
 name: mypy
 
 on:
   pull_request:
+    branches: [main]
+  push:
     branches: [main]
 
 jobs:
@@ -59,6 +64,7 @@ jobs:
       - name: Find Comment
         uses: peter-evans/find-comment@v2
         id: find_comment
+        if: ${{github.event_name == 'pull_request'}}
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "github-actions[bot]"
@@ -66,18 +72,18 @@ jobs:
           continue-on-error: true
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ failure() }}
+        if: ${{ failure() && github.event_name == 'pull_request'}}
         id: add_comment
         with:
           message: |
             ✨ Looks like mypy failed ✨
 
             If you want to fix this, we recommend doing it locally by:
-              1. Installing mypy, `pip install mypy`
+              1. Installing mypy, which is included in the dev dependencies: `pip install -e ".[dev]"`
               2. Diagnosing the errors by running `mypy .`
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.mypy.outputs.mypy_failed == 0 && steps.find_comment.outputs.comment-id != ''}}
+        if: ${{ steps.mypy.outputs.mypy_failed == 0 && steps.find_comment.outputs.comment-id != '' && github.event_name == 'pull_request'}}
         with:
           message-id: ${{ steps.find_comment.outputs.comment-id }}
           message: |
