@@ -12,6 +12,8 @@ on:
 jobs:
   mypy:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
 
@@ -58,21 +60,20 @@ jobs:
           else
             echo "mypy check failed"
             echo "mypy_failed=1" >> $GITHUB_OUTPUT
-            exit 1
           fi
 
       - name: Find Comment
         uses: peter-evans/find-comment@v2
         id: find_comment
         if: ${{github.event_name == 'pull_request'}}
+        continue-on-error: true
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: "github-actions[bot]"
           body-includes: ✨ Looks like mypy failed ✨
-          continue-on-error: true
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ failure() && github.event_name == 'pull_request'}}
+        if: ${{ steps.mypy.outputs.mypy_failed == 1 && github.event_name == 'pull_request'}}
         id: add_comment
         with:
           message: |
@@ -88,3 +89,9 @@ jobs:
           message-id: ${{ steps.find_comment.outputs.comment-id }}
           message: |
             🌟 mypy succeeds! 🌟
+
+      - name: fail run if mypy failed
+        id: fail_run
+        if: ${{steps.mypy.outputs.mypy_failed == 1}}
+        run: |
+          exit 1

@@ -8,6 +8,8 @@ on:
 jobs:
   cruft-check:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -41,21 +43,3 @@ jobs:
           comment-author: "github-actions[bot]"
           body-includes: ✨ There is a newer version of continuous integration files or other tooling available ✨
           continue-on-error: true
-
-      - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.cruft_check.outputs.cruft_failed == 1}}
-        id: add_comment
-        with:
-          message: |
-            ✨ There is a newer version of continuous integration files or other tooling available ✨
-
-            Feel free to either:
-            😎 Keep up the good work and ignore this comment or
-            🧠 If you're feeling extra helpful, run `cruft update` and merge in the updates
-
-      - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.cruft_check.outputs.cruft_failed == 0 && steps.find_comment.outputs.comment-id != ''}}
-        with:
-          message-id: ${{ steps.find_comment.outputs.comment-id }}
-          message: |
-            🌟 Cruft has been updated, thanks a lot! 🌟
