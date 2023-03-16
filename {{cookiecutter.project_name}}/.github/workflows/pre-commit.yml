@@ -61,10 +61,12 @@ jobs:
           message: |
             ✨ Looks like some pre-commit hooks failed. Those that could be fixed automatically have been comitted to the branch. ✨
             
-            We suggest using `git pull --rebase` to apply them locally. If some hooks failed for other reasons, you can:
+            We suggest using `git pull --rebase` to apply them locally. 
             
-            🕵️ Examine them in the `Run pre-commit` section of the `pre-commit` worklow, or 
-            🏎️ Run them locally by running `pre-commit run --hook-stage push --all-files`
+            If some errors cannot be autofixed, you can:
+            
+            🏎️ Get results locally by running `pre-commit run --hook-stage push --all-files`
+            🕵️ Examine the results in the `Run pre-commit` section of the `pre-commit` worklow, or 
 
       - name: Fail workflow
         if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.event_name == 'pull_request' }}
