@@ -15,6 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PRE_COMMIT }}
 
       - uses: actions/setup-python@v4
         with:
@@ -39,32 +43,25 @@ jobs:
             exit 1
           fi
 
-      - name: Find Comment
-        uses: peter-evans/find-comment@v2
-        id: find_comment
-        if: ${{github.event_name == 'pull_request'}}
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: ✨ Looks like some pre-commit hooks failed ✨
-          continue-on-error: true
+      - name: Commit formatting
+        if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.ref != 'refs/heads/main' }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -am "style: linting"
+          git push
 
       - uses: mshick/add-pr-comment@v2
-        if: ${{ failure() && github.event_name == 'pull_request'}}
+        if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.ref != 'refs/heads/main' }}
         id: add_comment
         with:
           message: |
-            ✨ Looks like some pre-commit hooks failed ✨
+            ✨ Looks like some pre-commit hooks failed. Those that could be automatically fixed have been comitted to the branch. ✨
+            
+            We suggest using `git pull --rebase` to apply them locally
 
-            If you want to fix this, we recommend doing it locally by:
-              1. Installing pre-commit hooks: `pre-commit install --install-hooks -t pre-push`
-              2. Diagnosing the errors by running `pre-commit run --hook-stage push --all-files` 
+            If any failed due to other causes, you can fix it locally by running `pre-commit run --hook-stage push --all-files`
 
-            After installing pre-commit hooks, they will run automatically in the future when you run `git push`.
-
-      - uses: mshick/add-pr-comment@v2
-        if: ${{ steps.mypy.outputs.mypy_failed == 0 && steps.find_comment.outputs.comment-id != '' && github.event_name == 'pull_request'}}
-        with:
-          message-id: ${{ steps.find_comment.outputs.comment-id }}
-          message: |
-            🌟 Pre-commit succeeds! 🌟
+      - name: Fail workflow
+        if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.ref != 'refs/heads/main' }}
+        run: exit 1
