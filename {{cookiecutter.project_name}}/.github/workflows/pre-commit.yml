@@ -12,6 +12,9 @@ jobs:
   pre-commit:
     permissions:
       pull-requests: write
+    concurrency:
+      group: "${{ github.workflow }} @ ${{ github.ref }}"
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -34,7 +37,7 @@ jobs:
         id: pre_commit
         continue-on-error: true
         run: |
-          if pre-commit run --hook-stage push --all-files; then
+          if pre-commit run --color always --hook-stage push --all-files; then
             echo "Pre-commit check passed"
             echo "pre_commit_failed=0" >> $GITHUB_OUTPUT
           else
@@ -49,18 +52,19 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -am "style: linting"
-          git push
+          git push --no-verify
 
       - uses: mshick/add-pr-comment@v2
         if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.event_name == 'pull_request' }}
         id: add_comment
         with:
           message: |
-            ✨ Looks like some pre-commit hooks failed. Those that could be automatically fixed have been comitted to the branch. ✨
+            ✨ Looks like some pre-commit hooks failed. Those that could be fixed automatically have been comitted to the branch. ✨
             
-            We suggest using `git pull --rebase` to apply them locally
-
-            If any failed due to other causes, you can fix it locally by running `pre-commit run --hook-stage push --all-files`
+            We suggest using `git pull --rebase` to apply them locally. If some hooks failed for other reasons, you can:
+            
+            🕵️ Examine them in the `Run pre-commit` section of the `pre-commit` worklow, or 
+            🏎️ Run them locally by running `pre-commit run --hook-stage push --all-files`
 
       - name: Fail workflow
         if: ${{ steps.pre_commit.outputs.pre_commit_failed == 1 && github.event_name == 'pull_request' }}
