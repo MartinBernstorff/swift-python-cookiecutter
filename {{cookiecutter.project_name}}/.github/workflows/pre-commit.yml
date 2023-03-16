@@ -59,11 +59,11 @@ jobs:
         id: add_comment
         with:
           message: |
-            ✨ Looks like some formatting rules failed. Those that could be fixed automatically have been comitted to the branch. ✨
+            Looks like some formatting rules failed. i
             
-            We suggest using `git pull --rebase` to apply them locally. 
+            ✨ Any automatic fixes have been comitted to the branch. We suggest using `git pull --rebase` to apply them locally. ✨
             
-            If some errors cannot be autofixed, you can:
+            If some errors could not be fixed automatically, you can:
             
             🏎️ Get results locally by running `pre-commit run --hook-stage push --all-files`
             🕵️ Examine the results in the `Run pre-commit` section of the `pre-commit` worklow, or 
