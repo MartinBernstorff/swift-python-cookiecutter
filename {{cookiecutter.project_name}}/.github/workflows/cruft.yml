@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: main
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -23,23 +25,25 @@ jobs:
       - name: Install Cruft
         run: pip install cruft
 
-      - name: Run Cruft Check
+      - name: Update cruft
         id: cruft_check
         run: |
-          if cruft check; then
-            echo "Cruft check passed"
-            echo "cruft_failed=0" >> $GITHUB_OUTPUT
+          cruft_output=$(cruft update --skip-apply-ask)
+          if echo "$cruft_output" | grep -q "Good work!"; then
+            echo "$cruft_output"
+            echo "cruft_updated=true" >> $GITHUB_OUTPUT
           else
-            echo "Cruft check failed"
-            echo "cruft_failed=1" >> $GITHUB_OUTPUT
-            exit 0
+            echo "$cruft_output"
+            echo "cruft_updated=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Find Comment
-        uses: peter-evans/find-comment@v2
-        id: find_comment
+      - name: Create Pull Request
+        if: steps.cruft_check.outputs.cruft_updated == 'true'
+        uses: peter-evans/create-pull-request@v4
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: "github-actions[bot]"
-          body-includes: ✨ There is a newer version of continuous integration files or other tooling available ✨
-          continue-on-error: true
+          commit-message: "ci: update cruft"
+          title: "ci: update cruft"
+          branch: "update-cruft"
+          body: "This PR updates cruft."
+          token: ${{ secrets.CRUFT_UPDATE }}
+        # This steps requires a personal access token with write permissions to the repository.
