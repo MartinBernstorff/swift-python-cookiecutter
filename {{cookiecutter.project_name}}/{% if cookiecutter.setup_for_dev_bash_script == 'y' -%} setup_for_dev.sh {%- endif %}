@@ -16,5 +16,4 @@ fi
 
 source .venv/bin/activate
 
-pre-commit install --install-hooks -t pre-push
 pip install -e .[dev,tests]

@@ -1,4 +1,4 @@
-default_stages: [push]
+default_stages: [manual]
 
 repos:
   - repo: https://github.com/charliermarsh/ruff-pre-commit
@@ -6,7 +6,6 @@ repos:
     rev: v0.0.254
     hooks:
       - id: ruff
-        stages: [push]
         args:
           [
             "--extend-select",
