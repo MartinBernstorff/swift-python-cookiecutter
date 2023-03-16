@@ -59,7 +59,7 @@ jobs:
         id: add_comment
         with:
           message: |
-            ✨ Looks like some pre-commit hooks failed. Those that could be fixed automatically have been comitted to the branch. ✨
+            ✨ Looks like some formatting rules failed. Those that could be fixed automatically have been comitted to the branch. ✨
             
             We suggest using `git pull --rebase` to apply them locally. 
             
