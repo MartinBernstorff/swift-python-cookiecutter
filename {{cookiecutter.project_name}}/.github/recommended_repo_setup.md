@@ -1,6 +1,11 @@
 # Initial setup for the repository
 ## Github personal access token
-For pre-commit actions to be able to commit changes to a PR, or for the Cruft update to be able to create a PR with updates from the upstream repo, you need a personal access token (PAT) with write permissions to the repo.
+For pre-commit actions to be able to commit changes to a PR, or for the Cruft update to be able to create a PR with updates from the upstream repo, you need a personal access token (PAT) with the following settings:
+
+**Expiration**: No expiration
+**scopes:**
+* `repo`
+* `workflow`
 
 #### Creating the PAT
 You can create a personal access token following [this guide](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
