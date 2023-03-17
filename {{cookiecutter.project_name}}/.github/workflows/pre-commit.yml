@@ -53,7 +53,10 @@ jobs:
           message: |
             Looks like some formatting rules failed.
             
-            ✨ The action has attempted automatic fixes. If any were succesful, they were committed to the branch. We suggest using `git pull --rebase` to apply them locally. ✨
+            ✨ The action has attempted automatic fixes ✨
+
+            If any were succesful, they were committed to the branch.
+            We suggest using `git pull --rebase` to apply them locally. 
             
             If some errors could not be fixed automatically, you can:
             
