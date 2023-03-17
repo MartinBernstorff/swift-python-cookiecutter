@@ -116,6 +116,7 @@ ignore = [
   "F841",
   "RET504"
 ]
+ignore-init-module-imports = true
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 unfixable = ["ERA"]
 # Exclude a variety of commonly ignored directories.
