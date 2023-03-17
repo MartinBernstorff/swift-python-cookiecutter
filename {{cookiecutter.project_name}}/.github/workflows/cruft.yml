@@ -13,12 +13,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: main
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -47,4 +47,3 @@ jobs:
           branch: "update-cruft"
           body: "This PR updates cruft."
           token: ${{ secrets.CRUFT_UPDATE }}
-        # This steps requires a personal access token with write permissions to the repository.
