@@ -12,6 +12,15 @@ jobs:
       pull-requests: write
 
     steps:
+      - name: Check if pull request is from a fork
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.fork }}" = "true" ]; then
+            echo "Pull request is from a fork and does not have permissions for PR creation. Exiting gracefully."
+            exit 0
+          else
+            echo "Pull request is not from a fork, continuing."
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
