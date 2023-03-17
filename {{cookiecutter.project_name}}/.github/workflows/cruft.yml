@@ -12,10 +12,17 @@ jobs:
       pull-requests: write
 
     steps:
+      # Avoid infinite loop where main 
+      # Feature PR -> cruft check from main ->
+      # Cruft update PR -> cruft check from main ->
+      # Cruft update PR ...
       - name: Check if pull request is from a fork
         run: |
           if [ "${{ github.event.pull_request.head.repo.fork }}" = "true" ]; then
             echo "Pull request is from a fork and does not have permissions for PR creation. Exiting gracefully."
+            exit 0
+          elif [ "${{github.event.pull_request.title}}"  == "update cruft" ]; then
+            echo "Pull request is already a cruft update. Exiting gracefully."
             exit 0
           else
             echo "Pull request is not from a fork, continuing."
@@ -47,12 +54,12 @@ jobs:
           fi
 
       - name: Create Pull Request
-        if: steps.cruft_check.outputs.cruft_updated == 'true'
         uses: peter-evans/create-pull-request@v4
+        if: ${{ steps.cruft_check.outputs.cruft_updated == 'true' }}
         continue-on-error: true
         with:
-          commit-message: "ci: update cruft"
-          title: "ci: update cruft"
+          title: "update cruft"
           branch: "update-cruft"
-          body: "This PR updates cruft."
+          body: "🌲 Cruft updates"
           token: ${{ secrets.PAT }}
+          commit-message: "ci: update cruft"
