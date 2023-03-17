@@ -1,12 +1,11 @@
 # Initial setup for the repository
-A list of recommendations when setting up a new GitHub repository using this template. 
+These are all GitHub settings we recommend enabling, e.g. go to the repository's `Settings > General > Allow auto-merge`.
 
 Feel free to delete or ignore this markdown file.
 
 * General
-  * Issues
   * Disallow squash and rebase commits
-  * Allow auto merge
+  * Allow auto-merge
   * Always suggest updating pull request branches 
 * Branch protection rules
   * Require a pull request before merging
