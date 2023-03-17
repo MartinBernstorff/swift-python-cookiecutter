@@ -55,4 +55,4 @@ jobs:
           title: "ci: update cruft"
           branch: "update-cruft"
           body: "This PR updates cruft."
-          token: ${{ secrets.CRUFT_UPDATE }}
+          token: ${{ secrets.PAT }}
