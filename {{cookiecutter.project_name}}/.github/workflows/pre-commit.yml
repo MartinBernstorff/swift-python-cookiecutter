@@ -34,7 +34,7 @@ jobs:
         id: pre_commit
         continue-on-error: true
         run: |
-          if pre-commit run --color always --hook-stage commit --all-files; then
+          if pre-commit run --color always --all-files; then
             echo "Pre-commit check passed"
             echo "pre_commit_failed=0" >> $GITHUB_OUTPUT
           else
@@ -60,7 +60,7 @@ jobs:
             
             If some errors could not be fixed automatically, you can:
             
-            🏎️ Get results locally by running `pre-commit run --hook-stage commit --all-files`
+            🏎️ Get results locally by running `pre-commit run --all-files`
             🕵️ Examine the results in the `Run pre-commit` section of this workflow `pre-commit` 
 
       - name: Commit formatting
