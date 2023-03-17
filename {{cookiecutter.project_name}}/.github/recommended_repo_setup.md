@@ -20,8 +20,9 @@ Feel free to delete or ignore this markdown file.
 
 * General
   * Disallow squash and rebase commits
-  * Allow auto-merge
   * Always suggest updating pull request branches 
+  * Allow auto-merge
+  * Automatically delete head branches
 
 * Branch protection rules
   * Require a pull request before merging
