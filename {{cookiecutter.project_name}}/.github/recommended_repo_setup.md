@@ -1,4 +1,8 @@
-# Initial repo setup
+# Initial setup for the repository
+A list of recommendations when setting up a new GitHub repository using this template. 
+
+Feel free to delete or ignore this markdown file.
+
 * General
   * Issues
   * Disallow squash and rebase commits
