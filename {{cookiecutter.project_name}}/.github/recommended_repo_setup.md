@@ -19,12 +19,21 @@ These are all GitHub settings we recommend enabling, e.g. go to the repository's
 Feel free to delete or ignore this markdown file.
 
 * General
-  * Disallow squash and rebase commits
-  * Always suggest updating pull request branches 
-  * Allow auto-merge
-  * Automatically delete head branches
+  * Pull Requests
+    * Disallow squash commits 
+    * Disallow rebase commits
+    * Always suggest updating pull request branches 
+    * Allow auto-merge
+    * Automatically delete head branches
 
-* Branch protection rules
-  * Require a pull request before merging
-  * Require status checks to pass before merging
-  * Require conversation resolution before merging
+* Branches
+  * Add a branch protection rule for "main"
+    * Require a pull request before merging
+      * Require approvals
+    * Require status checks to pass before merging
+      * Require branches to be up to date before merging
+      * Status checks that are required:
+        * mypy
+        * pre-commit
+        * pytest
+    * Require conversation resolution before merging
