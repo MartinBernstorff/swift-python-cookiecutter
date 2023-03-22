@@ -62,7 +62,7 @@ jobs:
       - name: Test report on failures
         uses: EnricoMi/publish-unit-test-result-action@v2
         id: test_report_with_annotations
-        if: ${{ github.actor != 'dependabot[bot]' && (success() || failure()) }} # Do not run for dependabot, run whether tests failed or succeeded
+        if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' && (success() || failure()) }} # Do not run for dependabot, run whether tests failed or succeeded
         with:
           comment_mode: "failures"
           files: |
@@ -71,7 +71,7 @@ jobs:
       - name: Pytest coverage comment
         id: coverage-comment
         uses: MishaKav/pytest-coverage-comment@main
-        if: ${{ github.actor != 'dependabot[bot]' && (success() || failure()) }}
+        if: ${{ github.actor != 'dependabot[bot]' && github.event_name == 'pull_request' && (success() || failure()) }}
         with:
           create-new-comment: false
           report-only-changed-files: true
