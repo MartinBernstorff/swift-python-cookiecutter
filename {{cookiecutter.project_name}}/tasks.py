@@ -108,6 +108,8 @@ def add_and_commit(c: Context):
             "🚧 Uncommitted changes detected",
         )
 
+        input("Press enter to add and commit the changes...")
+
         for line in uncommitted_changes_descr.splitlines():
             print(f"    {line.strip()}")
         print("\n")
