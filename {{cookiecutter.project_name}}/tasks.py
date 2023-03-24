@@ -22,13 +22,6 @@ class Emo:
     COMMUNICATE = "📣"
 
 
-@task
-def setup(c: Context, python_version: str = "3.9"):
-    git_init(c)
-    setup_venv(c, python_version=python_version)
-    install(c)
-
-
 def git_init(c: Context):
     # If no .git directory exits
     if not Path(".git").exists():
@@ -57,10 +50,143 @@ def setup_venv(
     c.run(f"source {venv_name}/bin/activate")
 
 
+def _add_commit(c: Context, msg: Optional[str] = None):
+    print("🔨 Adding and committing changes")
+    c.run("git add .")
+
+    if msg is None:
+        msg = input("Commit message: ")
+
+    c.run(f'git commit -m "{msg}"', pty=True, hide=True)
+    print("\n🤖 Changes added and committed\n")
+
+
+def is_uncommitted_changes(c: Context) -> bool:
+    git_status_result: Result = c.run(
+        "git status --porcelain",
+        pty=True,
+        hide=True,
+    )
+
+    uncommitted_changes = git_status_result.stdout != ""
+    return uncommitted_changes
+
+
+def add_and_commit(c: Context, msg: Optional[str] = None):
+    """Add and commit all changes."""
+    if is_uncommitted_changes(c):
+        uncommitted_changes_descr = c.run(
+            "git status --porcelain",
+            pty=True,
+            hide=True,
+        ).stdout
+
+        echo_header(
+            f"{Emo.WARN} Uncommitted changes detected",
+        )
+
+        input("Press enter to add and commit the changes...")
+
+        for line in uncommitted_changes_descr.splitlines():
+            print(f"    {line.strip()}")
+        print("\n")
+        _add_commit(c, msg=msg)
+
+
+def branch_exists_on_remote(c: Context) -> bool:
+    branch_name = Path(".git/HEAD").read_text().split("/")[-1].strip()
+
+    branch_exists_result: Result = c.run(
+        f"git ls-remote --heads origin {branch_name}",
+        hide=True,
+    )
+
+    return branch_name in branch_exists_result.stdout
+
+
+def update_branch(c: Context):
+    echo_header(f"{Emo.SYNC} Syncing branch with remote")
+
+    if not branch_exists_on_remote(c):
+        c.run("git push --set-upstream origin HEAD")
+    else:
+        print("Pulling")
+        c.run("git pull")
+        print("Pushing")
+        c.run("git push")
+
+
+def create_pr(c: Context):
+    c.run(
+        "gh pr create --web",
+        pty=True,
+    )
+
+
+def update_pr(c: Context):
+    echo_header(f"{Emo.COMMUNICATE} Syncing PR")
+    # Get current branch name
+    branch_name = Path(".git/HEAD").read_text().split("/")[-1].strip()
+    pr_result: Result = c.run(
+        "gh pr list --state OPEN",
+        pty=False,
+        hide=True,
+    )
+
+    if branch_name not in pr_result.stdout:
+        create_pr(c)
+    else:
+        open_web = input("Open in browser? [y/n] ")
+        if "y" in open_web.lower():
+            c.run("gh pr view --web", pty=True)
+
+
+def exit_if_error_in_stdout(result: Result):
+    if "error" in result.stdout:
+        exit(0)
+
+
+def pre_commit(c: Context):
+    """Run pre-commit checks."""
+    
+    # Essential to have a clean working directory before pre-commit to avoid committing
+    # heterogenous files under a "style: linting" commit
+    if is_uncommitted_changes(c):
+        print(
+            f"{Emo.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
+        )
+        exit(0)
+        
+    echo_header(f"{Emo.CLEAN} Running pre-commit checks")
+    pre_commit_cmd = "pre-commit run --all-files"
+    result = c.run(pre_commit_cmd, pty=True, warn=True)
+
+    exit_if_error_in_stdout(result)
+
+    if "fixed" in result.stdout or "reformatted" in result.stdout:
+        _add_commit(c, msg="style: linting")
+
+        print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
+        second_result = c.run(pre_commit_cmd, pty=True, warn=True)
+        exit_if_error_in_stdout(second_result)
+
+
+def mypy(c: Context):
+    echo_header(f"{Emo.CLEAN} Running mypy")
+    c.run("mypy .", pty=True)
+
+
 @task
 def install(c: Context):
     echo_header(f"{Emo.DO} Installing project")
     c.run("pip install -e '.[dev,tests]'")
+
+
+@task
+def setup(c: Context, python_version: str = "3.9"):
+    git_init(c)
+    setup_venv(c, python_version=python_version)
+    install(c)
 
 
 @task
@@ -100,48 +226,10 @@ def test(c: Context):
 
         exit(0)
 
-
-def _add_commit(c: Context, msg: Optional[str] = None):
-    print("🔨 Adding and committing changes")
-    c.run("git add .")
-
-    if msg is None:
-        msg = input("Commit message: ")
-
-    c.run(f'git commit -m "{msg}"', pty=True, hide=True)
-    print("\n🤖 Changes added and committed\n")
-
-
-def add_and_commit(c: Context, msg: Optional[str] = None):
-    """Add and commit all changes."""
-    if is_uncommitted_changes(c):
-        uncommitted_changes_descr = c.run(
-            "git status --porcelain",
-            pty=True,
-            hide=True,
-        ).stdout
-
-        echo_header(
-            f"{Emo.WARN} Uncommitted changes detected",
-        )
-
-        input("Press enter to add and commit the changes...")
-
-        for line in uncommitted_changes_descr.splitlines():
-            print(f"    {line.strip()}")
-        print("\n")
-        _add_commit(c, msg=msg)
-
-
-def is_uncommitted_changes(c: Context) -> bool:
-    git_status_result: Result = c.run(
-        "git status --porcelain",
-        pty=True,
-        hide=True,
-    )
-
-    uncommitted_changes = git_status_result.stdout != ""
-    return uncommitted_changes
+@task
+def lint(c: Context):
+    pre_commit(c)
+    mypy(c)
 
 
 @task
@@ -149,94 +237,5 @@ def pr(c: Context):
     add_and_commit(c)
     lint(c)
     test(c)
-    sync_with_git_remote(c)
-    sync_pr(c)
-
-
-def sync_with_git_remote(c: Context):
-    echo_header(f"{Emo.SYNC} Syncing branch with remote")
-
-    if not branch_exists_on_remote(c):
-        c.run("git push --set-upstream origin HEAD")
-    else:
-        print("Pulling")
-        c.run("git pull")
-        print("Pushing")
-        c.run("git push")
-
-
-def sync_pr(c: Context):
-    echo_header(f"{Emo.COMMUNICATE} Syncing PR")
-    # Get current branch name
-    branch_name = Path(".git/HEAD").read_text().split("/")[-1].strip()
-    pr_result: Result = c.run(
-        "gh pr list --state OPEN",
-        pty=False,
-        hide=True,
-    )
-
-    if branch_name not in pr_result.stdout:
-        create_pr(c)
-    else:
-        open_web = input("Open in browser? [y/n] ")
-        if "y" in open_web.lower():
-            c.run("gh pr view --web", pty=True)
-
-
-def create_pr(c: Context):
-    c.run(
-        "gh pr create --web",
-        pty=True,
-    )
-
-
-def branch_exists_on_remote(c: Context) -> bool:
-    branch_name = Path(".git/HEAD").read_text().split("/")[-1].strip()
-
-    branch_exists_result: Result = c.run(
-        f"git ls-remote --heads origin {branch_name}",
-        hide=True,
-    )
-
-    return branch_name in branch_exists_result.stdout
-
-
-@task
-def lint(c: Context):
-    pre_commit(c)
-    mypy(c)
-
-
-def pre_commit(c: Context):
-    """Run pre-commit checks."""
-    
-    # Essential to have a clean working directory before pre-commit to avoid committing
-    # heterogenous files under a "style: linting" commit
-    if is_uncommitted_changes(c):
-        print(
-            f"{Emo.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
-        )
-        exit(0)
-        
-    echo_header(f"{Emo.CLEAN} Running pre-commit checks")
-    pre_commit_cmd = "pre-commit run --all-files"
-    result = c.run(pre_commit_cmd, pty=True, warn=True)
-
-    exit_if_error_in_stdout(result)
-
-    if "fixed" in result.stdout or "reformatted" in result.stdout:
-        _add_commit(c, msg="style: linting")
-
-        print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
-        second_result = c.run(pre_commit_cmd, pty=True, warn=True)
-        exit_if_error_in_stdout(second_result)
-
-
-def exit_if_error_in_stdout(result: Result):
-    if "error" in result.stdout:
-        exit(0)
-
-
-def mypy(c: Context):
-    echo_header(f"{Emo.CLEAN} Running mypy")
-    c.run("mypy .", pty=True)
+    update_branch(c)
+    update_pr(c)
