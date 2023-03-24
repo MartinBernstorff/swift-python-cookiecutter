@@ -16,7 +16,6 @@ class Emo:
     FAILURE = "🚨"
     WARNING = "🚧"
     SYNC = "🚂"
-    STARTING = "🔨"
     PYTHON = "🐍"
     CLEAN = "🧹"
     TEST = "🧪"
@@ -33,7 +32,7 @@ def setup(c: Context, python_version: str = "3.9"):
 def git_init(c: Context):
     # If no .git directory exits
     if not Path(".git").exists():
-        echo_header(f"{Emo.STARTING} Initializing Git repository")
+        echo_header(f"{Emo.APPLY} Initializing Git repository")
         c.run("git init")
         c.run("git add .")
         c.run("git commit -m 'Initial commit'")
@@ -49,7 +48,7 @@ def setup_venv(
     venv_name = f'.venv{python_version.replace(".", "")}'
 
     if not Path(venv_name).exists():
-        echo_header(f"{Emo.STARTING} Creating virtual environment")
+        echo_header(f"{Emo.APPLY} Creating virtual environment for {Emo.PYTHON}{python_version}")
         c.run(f"python{python_version} -m venv {venv_name}")
         print(f"{Emo.SUCCESS} Virtual environment created")
     else:
@@ -60,13 +59,13 @@ def setup_venv(
 
 @task
 def install(c: Context):
-    echo_header(f"{Emo.STARTING} Installing project")
+    echo_header(f"{Emo.APPLY} Installing project")
     c.run("pip install -e '.[dev,tests]'")
 
 
 @task
 def update(c: Context):
-    echo_header(f"{Emo.STARTING} Updating project")
+    echo_header(f"{Emo.APPLY} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests]'")
 
 
