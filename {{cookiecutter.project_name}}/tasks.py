@@ -209,6 +209,10 @@ def lint(c: Context):
 
 
 def pre_commit(c: Context):
+    """Run pre-commit checks."""
+    
+    # Essential to have a clean working directory before pre-commit to avoid committing
+    # heterogenous files under a "style: linting" commit
     if is_uncommitted_changes(c):
         print(
             f"{Emo.WARNING} Your git working directory is not clean. Stash or commit before running pre-commit.",
