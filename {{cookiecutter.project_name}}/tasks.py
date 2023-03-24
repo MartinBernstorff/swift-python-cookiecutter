@@ -11,12 +11,12 @@ def echo_header(msg: str):
 
 @dataclass
 class Emo:
-    APPLY = "🤖"
-    SUCCESS = "✅"
-    FAILURE = "🚨"
-    WARNING = "🚧"
+    DO = "🤖"
+    GOOD = "✅"
+    FAIL = "🚨"
+    WARN = "🚧"
     SYNC = "🚂"
-    PYTHON = "🐍"
+    PY = "🐍"
     CLEAN = "🧹"
     TEST = "🧪"
     COMMUNICATE = "📣"
@@ -32,13 +32,13 @@ def setup(c: Context, python_version: str = "3.9"):
 def git_init(c: Context):
     # If no .git directory exits
     if not Path(".git").exists():
-        echo_header(f"{Emo.APPLY} Initializing Git repository")
+        echo_header(f"{Emo.DO} Initializing Git repository")
         c.run("git init")
         c.run("git add .")
         c.run("git commit -m 'Initial commit'")
-        print(f"{Emo.SUCCESS} Git repository initialized")
+        print(f"{Emo.GOOD} Git repository initialized")
     else:
-        print(f"{Emo.SUCCESS} Git repository already initialized")
+        print(f"{Emo.GOOD} Git repository already initialized")
 
 
 def setup_venv(
@@ -48,24 +48,24 @@ def setup_venv(
     venv_name = f'.venv{python_version.replace(".", "")}'
 
     if not Path(venv_name).exists():
-        echo_header(f"{Emo.APPLY} Creating virtual environment for {Emo.PYTHON}{python_version}")
+        echo_header(f"{Emo.DO} Creating virtual environment for {Emo.PY}{python_version}")
         c.run(f"python{python_version} -m venv {venv_name}")
-        print(f"{Emo.SUCCESS} Virtual environment created")
+        print(f"{Emo.GOOD} Virtual environment created")
     else:
-        print(f"{Emo.SUCCESS} Virtual environment already exists")
+        print(f"{Emo.GOOD} Virtual environment already exists")
 
     c.run(f"source {venv_name}/bin/activate")
 
 
 @task
 def install(c: Context):
-    echo_header(f"{Emo.APPLY} Installing project")
+    echo_header(f"{Emo.DO} Installing project")
     c.run("pip install -e '.[dev,tests]'")
 
 
 @task
 def update(c: Context):
-    echo_header(f"{Emo.APPLY} Updating project")
+    echo_header(f"{Emo.DO} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests]'")
 
 
@@ -96,7 +96,7 @@ def test(c: Context):
 
             # Keep only that after ::
             line_sans_suffix = line_sans_prefix[line_sans_prefix.find("::") + 2 :]
-            print(f"FAILED {Emo.FAILURE} #{line_sans_suffix}     ")
+            print(f"FAILED {Emo.FAIL} #{line_sans_suffix}     ")
 
         exit(0)
 
@@ -122,7 +122,7 @@ def add_and_commit(c: Context, msg: Optional[str] = None):
         ).stdout
 
         echo_header(
-            f"{Emo.WARNING} Uncommitted changes detected",
+            f"{Emo.WARN} Uncommitted changes detected",
         )
 
         input("Press enter to add and commit the changes...")
@@ -214,7 +214,7 @@ def pre_commit(c: Context):
     # heterogenous files under a "style: linting" commit
     if is_uncommitted_changes(c):
         print(
-            f"{Emo.WARNING} Your git working directory is not clean. Stash or commit before running pre-commit.",
+            f"{Emo.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
         )
         exit(0)
         
@@ -227,7 +227,7 @@ def pre_commit(c: Context):
     if "fixed" in result.stdout or "reformatted" in result.stdout:
         _add_commit(c, msg="style: linting")
 
-        print(f"{Emo.APPLY} Fixed errors, re-running pre-commit checks")
+        print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=True, warn=True)
         exit_if_error_in_stdout(second_result)
 
