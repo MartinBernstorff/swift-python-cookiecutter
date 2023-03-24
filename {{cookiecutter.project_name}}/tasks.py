@@ -204,17 +204,17 @@ def branch_exists_on_remote(c: Context) -> bool:
 
 @task
 def lint(c: Context):
-    if is_uncommitted_changes(c):
-        print(
-            f"{Emo.WARNING} Your git working directory is not clean. Stash or commit before linting.",
-        )
-        exit(0)
-
     pre_commit(c)
     mypy(c)
 
 
 def pre_commit(c: Context):
+    if is_uncommitted_changes(c):
+        print(
+            f"{Emo.WARNING} Your git working directory is not clean. Stash or commit before running pre-commit.",
+        )
+        exit(0)
+        
     echo_header(f"{Emo.CLEAN} Running pre-commit checks")
     pre_commit_cmd = "pre-commit run --all-files"
     result = c.run(pre_commit_cmd, pty=True, warn=True)
