@@ -31,7 +31,6 @@ name = "{{cookiecutter.license}}"
 [project.optional-dependencies]
 dev = [
   "cruft",
-  "pylint",
   "mypy",
   "pre-commit==2.20.0,<2.21.0",
   "ruff==0.0.254", # important that these match the pre-commit hooks
