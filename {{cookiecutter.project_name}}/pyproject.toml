@@ -22,10 +22,12 @@ dependencies = [
   "pydantic"
 ]
 
+{% if cookiecutter.license != "None" -%}
 [project.license]
 file = "LICENSE"
 name = "{{cookiecutter.license}}"
 
+{%- endif %}
 [project.optional-dependencies]
 dev = [
   "cruft",
