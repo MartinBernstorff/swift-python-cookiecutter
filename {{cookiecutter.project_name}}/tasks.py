@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Optional
 
-from attr import dataclass
 from invoke import Context, Result, task
+from dataclasses import dataclass
 
 
 def echo_header(msg: str):
@@ -84,8 +84,6 @@ def add_and_commit(c: Context, msg: Optional[str] = None):
         echo_header(
             f"{Emo.WARN} Uncommitted changes detected",
         )
-
-        input("Press enter to add and commit the changes...")
 
         for line in uncommitted_changes_descr.splitlines():
             print(f"    {line.strip()}")
