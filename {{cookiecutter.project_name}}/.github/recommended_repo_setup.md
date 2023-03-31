@@ -35,4 +35,5 @@ Feel free to delete or ignore this markdown file.
         * mypy
         * pre-commit
         * pytest
+        * check_for_rej
     * Require conversation resolution before merging
