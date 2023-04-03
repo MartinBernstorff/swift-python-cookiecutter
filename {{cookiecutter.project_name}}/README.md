@@ -14,13 +14,11 @@
 [tests]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions?workflow=Tests
 [black]: https://github.com/psf/black
 
-How about changes to this readme?
-
 TODO: Add a short description of the project.
 
 ## Installation
 
-You can install _{{cookiecutter.friendly_name}}_ via [pip] from [PyPI]:
+You can install `{{cookiecutter.project_name}}` via [pip] from [PyPI]:
 
 ```bash
 pip install {{cookiecutter.project_name}}
