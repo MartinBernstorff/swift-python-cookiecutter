@@ -1,3 +1,19 @@
+"""
+This project uses Invoke (pyinvoke.org) for task management.
+Install it via:
+
+```
+pip install invoke
+```
+
+And then run:
+
+```
+inv --list
+```
+"""
+
+
 import re
 from dataclasses import dataclass
 from pathlib import Path
