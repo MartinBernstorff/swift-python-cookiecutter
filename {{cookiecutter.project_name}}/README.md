@@ -5,7 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/v/{{cookiecutter.project_name}}.svg)][pypi status]
 [![Python Version](https://img.shields.io/pypi/pyversions/{{cookiecutter.project_name}})][pypi status]
 [![documentation](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/documentation/badge.svg)][documentation]
-[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/tests/badge.svg)][tests]
+[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions/workflows/tests.yml/badge.svg)][tests]
 
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
