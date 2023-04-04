@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Optional
 
 from invoke import Context, Result, task
-
+import sys
 
 def echo_header(msg: str):
     print(f"\n--- {msg} ---")
@@ -289,17 +289,18 @@ def pr(c: Context):
 
 
 @task
-def docs(c: Context, build: bool = False, view: bool = False):
+def docs(c: Context, view: bool = False, view_only: bool = False):
     """
     Build and view docs. If neither build or view are specified, both are run.
     """
-    if not build and not view:
-        build = True
-        view = True
-
-    if build:
+    if not view_only:
         echo_header(f"{Emo.DO} Building docs")
         c.run("sphinx-build -b html docs docs/_build/html")
     if view:
-        echo_header(f"{Emo.EXAMINE} open docvs in browser")
-        c.run("open docs/_build/html/index.html")
+        echo_header(f"{Emo.EXAMINE} open docs in browser")
+        # check the OS and open the docs in the browser
+        if sys.platform.system() == "Windows":
+            c.run("start docs/_build/html/index.html")
+        else:
+            c.run("open docs/_build/html/index.html")
+        
