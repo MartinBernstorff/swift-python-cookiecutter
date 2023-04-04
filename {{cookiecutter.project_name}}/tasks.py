@@ -11,6 +11,8 @@ And then run:
 ```
 inv --list
 ```
+
+If you do not wish to use invoke you can simply delete this file.
 """
 
 
@@ -204,7 +206,7 @@ def mypy(c: Context):
 @task
 def install(c: Context):
     echo_header(f"{Emo.DO} Installing project")
-    c.run("pip install -e '.[dev,tests]'")
+    c.run("pip install -e '.[dev,tests,docs]'")
 
 
 @task

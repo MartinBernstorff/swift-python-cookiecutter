@@ -14,7 +14,12 @@
 [tests]: https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions?workflow=Tests
 [black]: https://github.com/psf/black
 
+
+<!-- start short-description -->
+
 TODO: Add a short description of the project.
+
+<!-- end short-description -->
 
 ## Installation
 
@@ -32,13 +37,13 @@ To see more examples, see the [documentation].
 
 # 📖 Documentation
 
-| Documentation         |                                                  |
-| --------------------- | ------------------------------------------------ |
-| 🔧 **[Installation]**  | Installation instructions for using this package |
-| 📖 **[Documentation]** | A minimal and developing documentation           |
-| 👩‍💻 **[Tutorials]**     | Tutorials for using this package                 |
-| 🎛️ **[API Reference]** | API reference for this package                   |
-| 📚 **[FAQ]**           | Frequently asked questions                       |
+| Documentation         |                                                          |
+| --------------------- | -------------------------------------------------------- |
+| 🔧 **[Installation]**  | Installation instructions on how to install this package |
+| 📖 **[Documentation]** | A minimal and developing documentation                   |
+| 👩‍💻 **[Tutorials]**     | Tutorials for using this package                         |
+| 🎛️ **[API Reference]** | API reference for this package                           |
+| 📚 **[FAQ]**           | Frequently asked questions                               |
 
 
 # 💬 Where to ask questions
