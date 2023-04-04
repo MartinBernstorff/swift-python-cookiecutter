@@ -252,7 +252,7 @@ def test(c: Context):
             line_sans_suffix = line_sans_prefix[line_sans_prefix.find("::") + 2 :]
             print(f"FAILED {Emo.FAIL} #{line_sans_suffix}     ")
 
-    if "failed" in test_result.stdout or "error" in test_result.stdout:
+    if test_result.return_code != 0:
         exit(0)
 
 
