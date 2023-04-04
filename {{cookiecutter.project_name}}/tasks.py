@@ -278,7 +278,7 @@ def pr(c: Context):
 
 
 @task
-def docs(c: Context, build: bool=False, view: bool = False):
+def docs(c: Context, build: bool = False, view: bool = False):
     """
     Build and view docs. If neither build or view are specified, both are run.
     """
