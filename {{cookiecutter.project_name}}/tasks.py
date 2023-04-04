@@ -39,6 +39,7 @@ class Emo:
     CLEAN = "🧹"
     TEST = "🧪"
     COMMUNICATE = "📣"
+    EXAMINE = "🔍"
 
 
 def git_init(c: Context):
@@ -271,3 +272,20 @@ def pr(c: Context):
     test(c)
     update_branch(c)
     update_pr(c)
+
+
+@task
+def docs(c: Context, build: bool=False, view: bool = False):
+    """
+    Build and view docs. If neither build or view are specified, both are run.
+    """
+    if not build and not view:
+        build = True
+        view = True
+
+    if build:
+        echo_header(f"{Emo.DO} Building docs")
+        c.run("sphinx-build -b html docs docs/_build/html")
+    if view:
+        echo_header(f"{Emo.EXAMINE} open docvs in browser")
+        c.run("open docs/_build/html/index.html")
