@@ -28,6 +28,13 @@ git remote add origin {repository url}
 
 Where `repository url` is a link to an empty repository.
 
+
+## Recommened setup for the repository
+
+To see the recommended setup for the repository, see the following file:
+`{{cookiecutter.project_name}}/.github/recommended_repo_setup.md`
+
+
 ## Authors
 - Kenneth Enevoldsen
 - Martin Bernstorff

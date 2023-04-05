@@ -11,6 +11,8 @@ And then run:
 ```
 inv --list
 ```
+
+If you do not wish to use invoke you can simply delete this file.
 """
 
 
@@ -20,7 +22,7 @@ from pathlib import Path
 from typing import Optional
 
 from invoke import Context, Result, task
-
+import sys
 
 def echo_header(msg: str):
     print(f"\n--- {msg} ---")
@@ -37,13 +39,16 @@ class Emo:
     CLEAN = "🧹"
     TEST = "🧪"
     COMMUNICATE = "📣"
+    EXAMINE = "🔍"
 
 
-def git_init(c: Context):
+def git_init(c: Context, branch: str = "main"):
+    """Initialize a git repository if it does not exist yet.
+    """
     # If no .git directory exits
     if not Path(".git").exists():
         echo_header(f"{Emo.DO} Initializing Git repository")
-        c.run("git init")
+        c.run(f"git init -b {branch}")
         c.run("git add .")
         c.run("git commit -m 'Initial commit'")
         print(f"{Emo.GOOD} Git repository initialized")
@@ -189,7 +194,7 @@ def pre_commit(c: Context):
     exit_if_error_in_stdout(result)
 
     if "fixed" in result.stdout or "reformatted" in result.stdout:
-        _add_commit(c, msg="style: linting")
+        _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=True, warn=True)
@@ -204,7 +209,7 @@ def mypy(c: Context):
 @task
 def install(c: Context):
     echo_header(f"{Emo.DO} Installing project")
-    c.run("pip install -e '.[dev,tests]'")
+    c.run("pip install -e '.[dev,tests,docs]'")
 
 
 @task
@@ -220,7 +225,7 @@ def setup(c: Context, python_version: str = "3.9"):
 @task
 def update(c: Context):
     echo_header(f"{Emo.DO} Updating project")
-    c.run("pip install --upgrade -e '.[dev,tests]'")
+    c.run("pip install --upgrade -e '.[dev,tests,docs]'")
 
 
 @task
@@ -269,7 +274,7 @@ def test_for_rej(c: Context):
 
 @task
 def lint(c: Context):
-    test_for_rej(c)
+    """Lint the project using the pre-commit hooks and mypy."""
     pre_commit(c)
     mypy(c)
 
@@ -281,3 +286,21 @@ def pr(c: Context):
     test(c)
     update_branch(c)
     update_pr(c)
+
+
+@task
+def docs(c: Context, view: bool = False, view_only: bool = False):
+    """
+    Build and view docs. If neither build or view are specified, both are run.
+    """
+    if not view_only:
+        echo_header(f"{Emo.DO} Building docs")
+        c.run("sphinx-build -b html docs docs/_build/html")
+    if view:
+        echo_header(f"{Emo.EXAMINE} open docs in browser")
+        # check the OS and open the docs in the browser
+        if sys.platform.system() == "Windows":
+            c.run("start docs/_build/html/index.html")
+        else:
+            c.run("open docs/_build/html/index.html")
+        
