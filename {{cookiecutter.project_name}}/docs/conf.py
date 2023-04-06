@@ -49,7 +49,7 @@ autodoc_class_signature = "separated"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_title = "{{friendly_name}}"
+html_title = "{{cookiecutter.friendly_name}}"
 html_theme = "furo"
 # html_logo = "_static/icon.png"
 html_static_path = ["_static"]
