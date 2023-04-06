@@ -5,8 +5,8 @@ from datetime import datetime
 
 project = """{{cookiecutter.friendly_name}}"""
 
-author = "{{author}}"
-github_user = "{{github_user}}"
+author = "{{cookiecutter.author}}"
+github_user = "{{cookiecutter.github_user}}"
 repo_url = f"https://github.com/{github_user}/{project.lower()}"
 
 copyright = f"{datetime.now().year}, {author}"
