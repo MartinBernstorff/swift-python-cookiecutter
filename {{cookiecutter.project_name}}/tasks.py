@@ -22,7 +22,8 @@ from pathlib import Path
 from typing import Optional
 
 from invoke import Context, Result, task
-import sys
+
+import platform
 
 def echo_header(msg: str):
     print(f"\n--- {msg} ---")
@@ -299,7 +300,7 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     if view:
         echo_header(f"{Emo.EXAMINE} open docs in browser")
         # check the OS and open the docs in the browser
-        if sys.platform.system() == "Windows":
+        if platform.system() == "Windows":
             c.run("start docs/_build/html/index.html")
         else:
             c.run("open docs/_build/html/index.html")
