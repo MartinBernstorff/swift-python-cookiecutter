@@ -17,12 +17,14 @@ copyright = f"{datetime.now().year}, {author}"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.napoleon",
     "sphinxext.opengraph",
     "sphinx_copybutton",
     "sphinx.ext.githubpages",
     "myst_nb",
     "sphinx_design",
     "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
 ]
 
 language = "en"
