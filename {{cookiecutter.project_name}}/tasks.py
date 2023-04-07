@@ -16,6 +16,7 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
+import platform
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,7 +24,6 @@ from typing import Optional
 
 from invoke import Context, Result, task
 
-import platform
 
 def echo_header(msg: str):
     print(f"\n--- {msg} ---")
@@ -44,8 +44,7 @@ class Emo:
 
 
 def git_init(c: Context, branch: str = "main"):
-    """Initialize a git repository if it does not exist yet.
-    """
+    """Initialize a git repository if it does not exist yet."""
     # If no .git directory exits
     if not Path(".git").exists():
         echo_header(f"{Emo.DO} Initializing Git repository")
@@ -297,11 +296,10 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     if not view_only:
         echo_header(f"{Emo.DO} Building docs")
         c.run("sphinx-build -b html docs docs/_build/html")
-    if view:
+    if view or view_only:
         echo_header(f"{Emo.EXAMINE} open docs in browser")
         # check the OS and open the docs in the browser
         if platform.system() == "Windows":
             c.run("start docs/_build/html/index.html")
         else:
             c.run("open docs/_build/html/index.html")
-        
