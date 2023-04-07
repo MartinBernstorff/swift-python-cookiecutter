@@ -17,18 +17,21 @@ hide-toc: true
 :class-container: tuto-section-2
 ```{grid-item-card} 🔧 Installation
 :link: installation
+:link-type: doc
 
 Installation instructions on how to install this package
 ```
 
 ```{grid-item-card} 👩‍💻 Tutorials
 :link: tutorials
+:link-type: doc
 
 Tutorials to get you started uisng this package
 ```
 
 ```{grid-item-card} 📚 FAQ
 :link: tutorials
+:link-type: doc
 
 Frequently asked questions and answers
 ```
