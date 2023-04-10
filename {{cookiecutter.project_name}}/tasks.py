@@ -244,9 +244,7 @@ def test(c: Context):
 
         # Get lines with "FAILED" in them from the .pytest_results file
         failed_tests = [
-            line
-            for line in Path("tests/.pytest_results").read_text().splitlines()
-            if line.startswith("FAILED")
+            line for line in test_result.stdout if line.startswith("FAILED")
         ]
 
         for line in failed_tests:
