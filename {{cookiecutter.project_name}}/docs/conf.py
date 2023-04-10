@@ -9,7 +9,7 @@ author = "{{cookiecutter.author}}"
 github_user = "{{cookiecutter.github_user}}"
 repo_url = f"https://github.com/{github_user}/{project.lower()}"
 
-copyright = f"{datetime.now().year}, {author}"
+copyright = f"{datetime.now().year}, {author}" # noqa
 
 # -- General configuration ---------------------------------------------------
 
@@ -35,7 +35,7 @@ language = "en"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # Do not execute the notebooks when building the docs (turned off by default)
-# nbsphinx_execute = "never"
+# nbsphinx_execute = "never" # noqa
 
 
 
