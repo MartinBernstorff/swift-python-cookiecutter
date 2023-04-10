@@ -4,6 +4,8 @@ hide-toc: true
 
 # {{ cookiecutter.friendly_name }}
 
+[![GitHub stars](https://img.shields.io/github/stars/centre-for-humanities-computing/dacy.svg?style=social&label=Star&maxAge=2592000)](
+    https://github.com/centre-for-humanities-computing/DaCy)
 
 
 ```{include} ../README.md
