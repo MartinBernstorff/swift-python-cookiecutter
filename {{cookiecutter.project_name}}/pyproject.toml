@@ -138,6 +138,7 @@ exclude = [
   "node_modules",
   "venv",
   "__init__.py"
+  "docs/conf.py",
 ]
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
