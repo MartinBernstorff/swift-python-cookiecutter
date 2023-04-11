@@ -215,7 +215,7 @@ def install(c: Context):
 
 @task
 def setup(c: Context, python_version: str = "3.9"):
-    """Setup the project by creating a virtual environment."""
+    """Confirm that a git repo exists and setup a virtual environment."""
     git_init(c)
     venv_name = setup_venv(c, python_version=python_version)
     print(
