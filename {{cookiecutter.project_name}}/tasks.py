@@ -226,7 +226,7 @@ def setup(c: Context, python_version: str = "3.9"):
 
 @task
 def update(c: Context):
-    """Update the dependencies of the project by calloing pip install --upgrade."""
+    """Update dependencies."""
     echo_header(f"{Emo.DO} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests,docs]'")
 
