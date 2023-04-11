@@ -34,6 +34,9 @@ Where `repository url` is a link to an empty repository.
 To see the recommended setup for the repository, see the following file:
 `{{cookiecutter.project_name}}/.github/recommended_repo_setup.md`
 
+## Examples
+* Martin's [Personal Mnemonic Medium](https://github.com/MartinBernstorff/personal-mnemonic-medium/)
+
 
 ## Authors
 - Kenneth Enevoldsen

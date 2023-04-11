@@ -9,7 +9,7 @@ author = "{{cookiecutter.author}}"
 github_user = "{{cookiecutter.github_user}}"
 repo_url = f"https://github.com/{github_user}/{project.lower()}"
 
-copyright = f"{datetime.now().year}, {author}"
+copyright = f"{datetime.now().year}, {author}" # noqa
 
 # -- General configuration ---------------------------------------------------
 
@@ -37,8 +37,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # Do not execute the notebooks when building the docs (turned off by default)
 nb_execution_raise_on_error = True # Raise an exception when a cell execution fails
 nb_execution_mode = "cache" # Execute the notebooks only if the source has changed
-
-
 
 # Automatically extract typehints when specified and place them in
 # descriptions of the relevant function/method.
