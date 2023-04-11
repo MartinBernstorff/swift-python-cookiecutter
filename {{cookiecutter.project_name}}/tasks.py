@@ -233,7 +233,7 @@ def update(c: Context):
 
 @task
 def test(c: Context):
-    """Run tests using pytest."""
+    """Run tests"""
     echo_header(f"{Emo.TEST} Running tests")
     test_result: Result = c.run(
         "pytest -n auto -rfE --failed-first -p no:typeguard -p no:cov --disable-warnings -q",
