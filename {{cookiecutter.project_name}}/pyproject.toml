@@ -137,7 +137,7 @@ exclude = [
   "dist",
   "node_modules",
   "venv",
-  "__init__.py"
+  "__init__.py",
   "docs/conf.py",
 ]
 # Allow unused variables when underscore-prefixed.
