@@ -35,7 +35,8 @@ language = "en"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # Do not execute the notebooks when building the docs (turned off by default)
-# nbsphinx_execute = "never"
+nb_execution_raise_on_error = True # Raise an exception when a cell execution fails
+nb_execution_mode = "cache" # Execute the notebooks only if the source has changed
 
 
 
