@@ -34,13 +34,15 @@ Where `repository url` is a link to an empty repository.
 To see the recommended setup for the repository, see the following file:
 `{{cookiecutter.project_name}}/.github/recommended_repo_setup.md`
 
-# Examples of projects using this template
+## Examples
+Examples of projects using this template
 <!-- this is nice to have for personal use just 
 just help me find project that have dealt with the same issues as me
 
 it does not need to be up to date
  -->
 - [psycop-model-evaluation](https://github.com/Aarhus-Psychiatry-Research/psycop-model-evaluation)
+- Martin's [Personal Mnemonic Medium](https://github.com/MartinBernstorff/personal-mnemonic-medium/)
 
 ## Authors
 - Kenneth Enevoldsen

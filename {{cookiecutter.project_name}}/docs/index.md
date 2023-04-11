@@ -5,7 +5,6 @@ hide-toc: true
 # {{ cookiecutter.friendly_name }}
 
 
-
 ```{include} ../README.md
 :start-after: <!-- start short-description -->
 :end-before: <!-- end short-description -->

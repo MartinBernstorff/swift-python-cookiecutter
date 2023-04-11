@@ -208,12 +208,14 @@ def mypy(c: Context):
 
 @task
 def install(c: Context):
+    """Install the project in editable mode using pip install"""
     echo_header(f"{Emo.DO} Installing project")
     c.run("pip install -e '.[dev,tests,docs]'")
 
 
 @task
 def setup(c: Context, python_version: str = "3.9"):
+    """Confirm that a git repo exists and setup a virtual environment."""
     git_init(c)
     venv_name = setup_venv(c, python_version=python_version)
     print(
@@ -224,12 +226,14 @@ def setup(c: Context, python_version: str = "3.9"):
 
 @task
 def update(c: Context):
+    """Update dependencies."""
     echo_header(f"{Emo.DO} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests,docs]'")
 
 
 @task
 def test(c: Context):
+    """Run tests"""
     echo_header(f"{Emo.TEST} Running tests")
     test_result: Result = c.run(
         "pytest -n auto -rfE --failed-first -p no:typeguard -p no:cov --disable-warnings -q",
@@ -244,9 +248,7 @@ def test(c: Context):
 
         # Get lines with "FAILED" in them from the .pytest_results file
         failed_tests = [
-            line
-            for line in Path("tests/.pytest_results").read_text().splitlines()
-            if line.startswith("FAILED")
+            line for line in test_result.stdout if line.startswith("FAILED")
         ]
 
         for line in failed_tests:
@@ -281,6 +283,7 @@ def lint(c: Context):
 
 @task
 def pr(c: Context):
+    """Run all checks and update the PR."""
     add_and_commit(c)
     lint(c)
     test(c)
