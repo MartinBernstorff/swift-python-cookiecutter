@@ -28,7 +28,5 @@ def test(c: Context):
     c.run("pip install cruft")
     c.run("cruft create . -y")
 
-    c.run(f"chmod +x {new_instance_dir}/.github/first_setup.sh")
-
     for invoke_command in ["setup", "install", "lint", "test", "docs"]:
         c.run(f"cd {new_instance_dir} && inv {invoke_command}")
