@@ -14,7 +14,7 @@ jobs:
 
       - name: Cruft create
         run: |
-          pip install invoke
-          inv setup
-          source .venv39/bin/activate
-          inv install
+          cruft create . -y
+          cd swift-python
+          chmod +x .github/first_setup.sh
+          bash .github/first_setup.sh
