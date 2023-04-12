@@ -17,6 +17,11 @@ jobs:
           git config --global user.name "MartinBernstorff"
           git config --global user.email "martinbernstorff@gmail.com"
 
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
       - name: Cruft create
         run: |
           # Using a bash script allows testing locally as well

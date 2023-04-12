@@ -4,8 +4,7 @@
 # Also used by create_new_project.yml in git workflows
 set -e
 pip install invoke
-inv setup --python-version=""
-ls -la
+inv setup
 source .venv/bin/activate
 inv install
 inv lint
