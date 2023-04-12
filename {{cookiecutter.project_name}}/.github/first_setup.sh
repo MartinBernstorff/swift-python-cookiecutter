@@ -3,6 +3,7 @@
 # Super handy when checking if the template works locally,
 # Also used by .github/workflows/test_creating_template_instance.yml
 set -e
+ls -la
 pip install invoke
 inv setup
 inv install
