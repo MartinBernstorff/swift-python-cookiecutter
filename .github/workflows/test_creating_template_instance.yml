@@ -5,17 +5,17 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  check-for-rej-files:
+  create-template-instance:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-    - name: Set Git user information
-      run: |
-        git config --global user.name "MartinBernstorff"
-        git config --global user.email "martinbernstorff@gmail.com"
+      - name: Set Git user information
+        run: |
+          git config --global user.name "MartinBernstorff"
+          git config --global user.email "martinbernstorff@gmail.com"
 
       - name: Cruft create
         run: |
