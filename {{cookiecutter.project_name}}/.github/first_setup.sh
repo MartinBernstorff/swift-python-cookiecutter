@@ -6,4 +6,5 @@ inv setup
 source .venv39/bin/activate
 inv install
 inv lint
+inv test
 inv docs

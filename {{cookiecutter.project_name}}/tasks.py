@@ -176,7 +176,7 @@ def exit_if_error_in_stdout(result: Result):
             exit(0)
 
 
-def pre_commit(c: Context):
+def pre_commit(c: Context, auto_fix: bool):
     """Run pre-commit checks."""
 
     # Essential to have a clean working directory before pre-commit to avoid committing
@@ -193,7 +193,7 @@ def pre_commit(c: Context):
 
     exit_if_error_in_stdout(result)
 
-    if "fixed" in result.stdout or "reformatted" in result.stdout:
+    if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
@@ -275,9 +275,9 @@ def test_for_rej(c: Context):
 
 
 @task
-def lint(c: Context):
+def lint(c: Context, auto_fix: bool = False):
     """Lint the project using the pre-commit hooks and mypy."""
-    pre_commit(c)
+    pre_commit(c=c, auto_fix=auto_fix)
     mypy(c)
 
 
