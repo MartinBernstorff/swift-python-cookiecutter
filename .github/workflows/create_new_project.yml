@@ -1,0 +1,20 @@
+name: Create a cruft project
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  check-for-rej-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cruft create
+        run: |
+          pip install invoke
+          inv setup
+          source .venv39/bin/activate
+          inv install
