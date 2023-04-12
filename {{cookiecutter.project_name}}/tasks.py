@@ -64,7 +64,7 @@ def setup_venv(
 
     if not Path(venv_name).exists():
         echo_header(
-            f"{Emo.DO} Creating virtual environment for {Emo.PY}{python_version}",
+            f"{Emo.DO} Creating virtual environment for {python_version}{Emo.PY}",
         )
         c.run(f"python{python_version} -m venv {venv_name}")
         print(f"{Emo.GOOD} Virtual environment created")
