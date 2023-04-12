@@ -28,5 +28,5 @@ def test(c: Context):
     c.run("pip install cruft")
     c.run("cruft create . -y")
 
-    for invoke_command in ["setup", "install", "lint", "test", "docs"]:
+    for invoke_command in ["lint", "setup", "install", "test", "docs"]:
         c.run(f"cd {new_instance_dir} && inv {invoke_command}")
