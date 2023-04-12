@@ -27,5 +27,5 @@ jobs:
       - name: Cruft create
         run: |
           # Using a bash script allows testing locally as well
-          chmod +x test_template_creation.sh
-          ./test_template_creation.sh
+          chmod +x .github/test_template_creation.sh
+          sh .github/test_template_creation.sh
