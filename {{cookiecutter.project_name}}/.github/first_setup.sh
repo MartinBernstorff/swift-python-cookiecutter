@@ -5,7 +5,6 @@
 set -e
 pip install invoke
 inv setup
-source .venv/bin/activate
 inv install
 inv lint
 inv test
