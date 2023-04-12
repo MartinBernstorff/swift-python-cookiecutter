@@ -202,6 +202,7 @@ def pre_commit(c: Context, auto_fix: bool):
     else:
         if result.return_code != 0:
             print(f"{Emo.FAIL} Pre-commit checks failed")
+            exit(1)
 
 
 def mypy(c: Context):
