@@ -14,8 +14,8 @@ jobs:
 
       - name: Set Git user information
         run: |
-          git config --global user.name "MartinBernstorff"
-          git config --global user.email "martinbernstorff@gmail.com"
+          git config --global user.name "Test"
+          git config --global user.email "test@gmail.com"
 
       - name: Setup Python
         uses: actions/setup-python@v4
