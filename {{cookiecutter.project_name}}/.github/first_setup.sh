@@ -5,7 +5,7 @@
 set -e
 pip install invoke
 inv setup --python-version=""
-ls
+ls -la
 source .venv/bin/activate
 inv install
 inv lint
