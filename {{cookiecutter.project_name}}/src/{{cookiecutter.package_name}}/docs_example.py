@@ -2,6 +2,7 @@
 This is just a sample script used for showcasing the documentation.
 """
 
+
 def sample_function(arg1: str, arg2: str) -> str:
     """This is a sample function.
 

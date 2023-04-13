@@ -64,7 +64,7 @@ def setup_venv(
 
     if not Path(venv_name).exists():
         echo_header(
-            f"{Emo.DO} Creating virtual environment for {Emo.PY}{python_version}",
+            f"{Emo.DO} Creating virtual environment for {python_version}{Emo.PY}",
         )
         c.run(f"python{python_version} -m venv {venv_name}")
         print(f"{Emo.GOOD} Virtual environment created")
@@ -176,7 +176,7 @@ def exit_if_error_in_stdout(result: Result):
             exit(0)
 
 
-def pre_commit(c: Context):
+def pre_commit(c: Context, auto_fix: bool):
     """Run pre-commit checks."""
 
     # Essential to have a clean working directory before pre-commit to avoid committing
@@ -185,7 +185,7 @@ def pre_commit(c: Context):
         print(
             f"{Emo.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
         )
-        exit(0)
+        exit(1)
 
     echo_header(f"{Emo.CLEAN} Running pre-commit checks")
     pre_commit_cmd = "pre-commit run --all-files"
@@ -193,12 +193,16 @@ def pre_commit(c: Context):
 
     exit_if_error_in_stdout(result)
 
-    if "fixed" in result.stdout or "reformatted" in result.stdout:
+    if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=True, warn=True)
         exit_if_error_in_stdout(second_result)
+    else:
+        if result.return_code != 0:
+            print(f"{Emo.FAIL} Pre-commit checks failed")
+            exit(1)
 
 
 def mypy(c: Context):
@@ -275,17 +279,17 @@ def test_for_rej(c: Context):
 
 
 @task
-def lint(c: Context):
+def lint(c: Context, auto_fix: bool = False):
     """Lint the project using the pre-commit hooks and mypy."""
-    pre_commit(c)
+    pre_commit(c=c, auto_fix=auto_fix)
     mypy(c)
 
 
 @task
-def pr(c: Context):
+def pr(c: Context, auto_fix: bool = False):
     """Run all checks and update the PR."""
     add_and_commit(c)
-    lint(c)
+    lint(c, auto_fix=auto_fix)
     test(c)
     update_branch(c)
     update_pr(c)
