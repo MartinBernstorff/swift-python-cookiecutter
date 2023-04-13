@@ -9,7 +9,7 @@ author = "{{cookiecutter.author}}"
 github_user = "{{cookiecutter.github_user}}"
 repo_url = f"https://github.com/{github_user}/{project.lower()}"
 
-copyright = f"{datetime.now().year}, {author}" # noqa
+copyright = f"{datetime.now().year}, {author}"  # noqa
 
 # -- General configuration ---------------------------------------------------
 
@@ -35,8 +35,8 @@ language = "en"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # Do not execute the notebooks when building the docs (turned off by default)
-nb_execution_raise_on_error = True # Raise an exception when a cell execution fails
-nb_execution_mode = "cache" # Execute the notebooks only if the source has changed
+nb_execution_raise_on_error = True  # Raise an exception when a cell execution fails
+nb_execution_mode = "cache"  # Execute the notebooks only if the source has changed
 
 # Automatically extract typehints when specified and place them in
 # descriptions of the relevant function/method.
@@ -86,14 +86,12 @@ html_theme_options = {
             "class": "",
         },
     ],
-
     "source_repository": repo_url,
     "source_branch": "main",
     "source_directory": "docs/",
     "light_logo": "icon.png",
     "dark_logo": "icon.png",
     "light_css_variables": {
-
         "color-brand-primary": "#ff5454",
         "color-brand-content": "#ff7575",
     },
@@ -101,7 +99,6 @@ html_theme_options = {
         "color-brand-primary": "#ff8f8f",
         "color-brand-content": "#ff8f8f",
     },
-
     "sidebar_hide_name": False,
     "navigation_with_keys": True,
 }
