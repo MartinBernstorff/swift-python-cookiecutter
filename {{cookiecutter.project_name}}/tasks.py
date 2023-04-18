@@ -257,7 +257,8 @@ def test(
 
     pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
 
-    if python_versions[0] is None:
+    if len(python_versions) == 0:
+        # Invoke passes an empty list if no arguments are passed, even if the default argument is a list with a None
         tox_command = f"pytest {pytest_flags}"
     else:
         tox_environments = [f"py{v}".replace(".", "") for v in python_versions]
@@ -265,7 +266,6 @@ def test(
         # To maintain consistency in inputs, but outputs should match tox.ini, we remove the period
 
         tox_command = f"tox p -e {tox_env_string} -- {pytest_flags}"
-        print(tox_command)
 
     test_result: Result = c.run(
         tox_command,
@@ -274,8 +274,6 @@ def test(
     )
 
     failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
-
-    print(failed_tests)
 
     if len(failed_tests) > 0:
         print("\n\n\n")
