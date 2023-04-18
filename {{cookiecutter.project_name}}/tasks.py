@@ -18,11 +18,14 @@ If you do not wish to use invoke you can simply delete this file.
 
 import platform
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 from invoke import Context, Result, task
+
+NOT_WINDOWS = platform.system() != "Windows"
 
 
 def echo_header(msg: str):
@@ -50,7 +53,7 @@ def git_init(c: Context, branch: str = "main"):
         echo_header(f"{Msg.DOING} Initializing Git repository")
         c.run(f"git init -b {branch}")
         c.run("git add .")
-        c.run("git commit -m 'Initial commit'")
+        c.run("git commit -m 'Init'")
         print(f"{Msg.GOOD} Git repository initialized")
     else:
         print(f"{Msg.GOOD} Git repository already initialized")
@@ -83,14 +86,14 @@ def _add_commit(c: Context, msg: Optional[str] = None):
     if msg is None:
         msg = input("Commit message: ")
 
-    c.run(f'git commit -m "{msg}"', pty=True, hide=True)
+    c.run(f'git commit -m "{msg}"', pty=NOT_WINDOWS, hide=True)
     print("\n🤖 Changes added and committed\n")
 
 
 def is_uncommitted_changes(c: Context) -> bool:
     git_status_result: Result = c.run(
         "git status --porcelain",
-        pty=True,
+        pty=NOT_WINDOWS,
         hide=True,
     )
 
@@ -103,7 +106,7 @@ def add_and_commit(c: Context, msg: Optional[str] = None):
     if is_uncommitted_changes(c):
         uncommitted_changes_descr = c.run(
             "git status --porcelain",
-            pty=True,
+            pty=NOT_WINDOWS,
             hide=True,
         ).stdout
 
@@ -143,7 +146,7 @@ def update_branch(c: Context):
 def create_pr(c: Context):
     c.run(
         "gh pr create --web",
-        pty=True,
+        pty=NOT_WINDOWS,
     )
 
 
@@ -162,7 +165,7 @@ def update_pr(c: Context):
     else:
         open_web = input("Open in browser? [y/n] ")
         if "y" in open_web.lower():
-            c.run("gh pr view --web", pty=True)
+            c.run("gh pr view --web", pty=NOT_WINDOWS)
 
 
 def exit_if_error_in_stdout(result: Result):
@@ -189,7 +192,7 @@ def pre_commit(c: Context, auto_fix: bool):
 
     echo_header(f"{Msg.CLEAN} Running pre-commit checks")
     pre_commit_cmd = "pre-commit run --all-files"
-    result = c.run(pre_commit_cmd, pty=True, warn=True)
+    result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
 
     exit_if_error_in_stdout(result)
 
@@ -197,7 +200,7 @@ def pre_commit(c: Context, auto_fix: bool):
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{Msg.DOING} Fixed errors, re-running pre-commit checks")
-        second_result = c.run(pre_commit_cmd, pty=True, warn=True)
+        second_result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
         exit_if_error_in_stdout(second_result)
     else:
         if result.return_code != 0:
@@ -207,14 +210,19 @@ def pre_commit(c: Context, auto_fix: bool):
 
 def mypy(c: Context):
     echo_header(f"{Msg.CLEAN} Running mypy")
-    c.run("mypy .", pty=True)
+    c.run("mypy .", pty=NOT_WINDOWS)
 
 
 @task
-def install(c: Context):
+def install(c: Context, args: str, msg: bool = True):
     """Install the project in editable mode using pip install"""
-    echo_header(f"{Msg.DOING} Installing project")
-    c.run("pip install -e '.[dev,tests,docs]'")
+    if msg:
+        echo_header(f"{Msg.DOING} Installing project")
+
+    if NOT_WINDOWS:
+        c.run(f"pip install -e '.[dev,tests,docs]' {args}")
+    else:
+        c.run(f"pip install -e .[dev,tests,docs] {args}")
 
 
 @task
@@ -222,6 +230,7 @@ def setup(c: Context, python_version: str = "3.9"):
     """Confirm that a git repo exists and setup a virtual environment."""
     git_init(c)
     venv_name = setup_venv(c, python_version=python_version)
+
     print(
         f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
     )
@@ -232,7 +241,7 @@ def setup(c: Context, python_version: str = "3.9"):
 def update(c: Context):
     """Update dependencies."""
     echo_header(f"{Msg.DOING} Updating project")
-    c.run("pip install --upgrade -e '.[dev,tests,docs]'")
+    install(c, args="--upgrade", msg=False)
 
 
 @task
@@ -240,9 +249,9 @@ def test(c: Context):
     """Run tests"""
     echo_header(f"{Msg.TEST} Running tests")
     test_result: Result = c.run(
-        "pytest -n auto -rfE --failed-first -p no:cov --disable-warnings -q",
+        "pytest tests/ -n auto -rfE --failed-first -p no:cov --disable-warnings -q",
         warn=True,
-        pty=True,
+        pty=NOT_WINDOWS,
     )
 
     # If "failed" in the pytest results
@@ -308,7 +317,7 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     if view or view_only:
         echo_header(f"{Msg.EXAMINE}: Opening docs in browser")
         # check the OS and open the docs in the browser
-        if platform.system() == "Windows":
-            c.run("start docs/_build/html/index.html")
-        else:
+        if NOT_WINDOWS:
             c.run("open docs/_build/html/index.html")
+        else:
+            c.run("start docs/_build/html/index.html")
