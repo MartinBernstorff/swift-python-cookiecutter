@@ -74,6 +74,8 @@ def setup_venv(
             print(f"{Msg.GOOD} Virtual environment created")
             return venv_name
         else:
+            # Getting at the correct python executable is a bit of a pain on Windows,
+            # so we'll just skip this step for now.
             print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
             return None
     else:
