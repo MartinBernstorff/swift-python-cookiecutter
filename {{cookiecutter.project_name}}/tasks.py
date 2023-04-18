@@ -64,13 +64,17 @@ def setup_venv(
     python_version: str,
 ) -> str:
     venv_name = f'.venv{python_version.replace(".", "")}'
-
+    
+    
     if not Path(venv_name).exists():
-        echo_header(
-            f"{Msg.DOING} Creating virtual environment for {python_version}{Msg.PY}",
-        )
-        c.run(f"python{python_version} -m venv {venv_name}")
-        print(f"{Msg.GOOD} Virtual environment created")
+        if NOT_WINDOWS:
+            echo_header(
+                f"{Msg.DOING} Creating virtual environment for {python_version}{Msg.PY}",
+            )
+            c.run(f"python{python_version} -m venv {venv_name}")
+            print(f"{Msg.GOOD} Virtual environment created")
+        else:
+            print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
     else:
         print(f"{Msg.GOOD} Virtual environment already exists")
 
