@@ -30,18 +30,17 @@ def echo_header(msg: str):
 
 
 @dataclass
-class Emo:
-    # We use unicode chars to support windows
-    DO = "🤖"
-    GOOD = "✅"
-    FAIL = "🚨"
-    WARN = "🚧"
-    SYNC = "🚂"
-    PY = "🐍"
-    CLEAN = "🧹"
-    TEST = "🧪"
-    COMMUNICATE = "📣"
-    EXAMINE = "🔍"
+class Msg:
+    DO = "DOING" 
+    GOOD = "DONE"
+    FAIL = "FAILED"
+    WARN = "WARNING"
+    SYNC = "SYNCING"
+    PY = ""
+    CLEAN = "CLEANING"
+    TEST = "TESTING"
+    COMMUNICATE = "COMMUNICATING"
+    EXAMINE = "VIEWING"
 
     def replace_attribute_values_with_attribute_name(self):
         """Replace attribute values with attribute names. Useful for Windows, which doesn't support emojis."""
@@ -53,7 +52,7 @@ print(platform.system())
 
 # If OS is Windows, replace emojis with attribute names
 if platform.system() == "Windows":
-    Emo().replace_attribute_values_with_attribute_name()
+    Msg().replace_attribute_values_with_attribute_name()
     
 
 
@@ -61,13 +60,13 @@ def git_init(c: Context, branch: str = "main"):
     """Initialize a git repository if it does not exist yet."""
     # If no .git directory exits
     if not Path(".git").exists():
-        echo_header(f"{Emo.DO} Initializing Git repository")
+        echo_header(f"{Msg.DO} Initializing Git repository")
         c.run(f"git init -b {branch}")
         c.run("git add .")
         c.run("git commit -m 'Initial commit'")
-        print(f"{Emo.GOOD} Git repository initialized")
+        print(f"{Msg.GOOD} Git repository initialized")
     else:
-        print(f"{Emo.GOOD} Git repository already initialized")
+        print(f"{Msg.GOOD} Git repository already initialized")
 
 
 def setup_venv(
@@ -78,12 +77,12 @@ def setup_venv(
 
     if not Path(venv_name).exists():
         echo_header(
-            f"{Emo.DO} Creating virtual environment for {python_version}{Emo.PY}",
+            f"{Msg.DO} Creating virtual environment for {python_version}{Msg.PY}",
         )
         c.run(f"python{python_version} -m venv {venv_name}")
-        print(f"{Emo.GOOD} Virtual environment created")
+        print(f"{Msg.GOOD} Virtual environment created")
     else:
-        print(f"{Emo.GOOD} Virtual environment already exists")
+        print(f"{Msg.GOOD} Virtual environment already exists")
 
     c.run(f"source {venv_name}/bin/activate")
 
@@ -122,7 +121,7 @@ def add_and_commit(c: Context, msg: Optional[str] = None):
         ).stdout
 
         echo_header(
-            f"{Emo.WARN} Uncommitted changes detected",
+            f"{Msg.WARN} Uncommitted changes detected",
         )
 
         for line in uncommitted_changes_descr.splitlines():
@@ -143,7 +142,7 @@ def branch_exists_on_remote(c: Context) -> bool:
 
 
 def update_branch(c: Context):
-    echo_header(f"{Emo.SYNC} Syncing branch with remote")
+    echo_header(f"{Msg.SYNC} Syncing branch with remote")
 
     if not branch_exists_on_remote(c):
         c.run("git push --set-upstream origin HEAD")
@@ -162,7 +161,7 @@ def create_pr(c: Context):
 
 
 def update_pr(c: Context):
-    echo_header(f"{Emo.COMMUNICATE} Syncing PR")
+    echo_header(f"{Msg.COMMUNICATE} Syncing PR")
     # Get current branch name
     branch_name = Path(".git/HEAD").read_text().split("/")[-1].strip()
     pr_result: Result = c.run(
@@ -197,11 +196,11 @@ def pre_commit(c: Context, auto_fix: bool):
     # heterogenous files under a "style: linting" commit
     if is_uncommitted_changes(c):
         print(
-            f"{Emo.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
+            f"{Msg.WARN} Your git working directory is not clean. Stash or commit before running pre-commit.",
         )
         exit(1)
 
-    echo_header(f"{Emo.CLEAN} Running pre-commit checks")
+    echo_header(f"{Msg.CLEAN} Running pre-commit checks")
     pre_commit_cmd = "pre-commit run --all-files"
     result = c.run(pre_commit_cmd, pty=True, warn=True)
 
@@ -210,24 +209,24 @@ def pre_commit(c: Context, auto_fix: bool):
     if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
-        print(f"{Emo.DO} Fixed errors, re-running pre-commit checks")
+        print(f"{Msg.DO} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=True, warn=True)
         exit_if_error_in_stdout(second_result)
     else:
         if result.return_code != 0:
-            print(f"{Emo.FAIL} Pre-commit checks failed")
+            print(f"{Msg.FAIL} Pre-commit checks failed")
             exit(1)
 
 
 def mypy(c: Context):
-    echo_header(f"{Emo.CLEAN} Running mypy")
+    echo_header(f"{Msg.CLEAN} Running mypy")
     c.run("mypy .", pty=True)
 
 
 @task
 def install(c: Context):
     """Install the project in editable mode using pip install"""
-    echo_header(f"{Emo.DO} Installing project")
+    echo_header(f"{Msg.DO} Installing project")
     c.run("pip install -e '.[dev,tests,docs]'")
 
 
@@ -237,22 +236,22 @@ def setup(c: Context, python_version: str = "3.9"):
     git_init(c)
     venv_name = setup_venv(c, python_version=python_version)
     print(
-        f"{Emo.DO} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
+        f"{Msg.DO} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
     )
-    print(f"{Emo.DO} Then install the project by running: \n\n\t\t inv install\n")
+    print(f"{Msg.DO} Then install the project by running: \n\n\t\t inv install\n")
 
 
 @task
 def update(c: Context):
     """Update dependencies."""
-    echo_header(f"{Emo.DO} Updating project")
+    echo_header(f"{Msg.DO} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests,docs]'")
 
 
 @task
 def test(c: Context):
     """Run tests"""
-    echo_header(f"{Emo.TEST} Running tests")
+    echo_header(f"{Msg.TEST} Running tests")
     test_result: Result = c.run(
         "pytest -n auto -rfE --failed-first -p no:cov --disable-warnings -q",
         warn=True,
@@ -275,7 +274,7 @@ def test(c: Context):
 
             # Keep only that after ::
             line_sans_suffix = line_sans_prefix[line_sans_prefix.find("::") + 2 :]
-            print(f"FAILED {Emo.FAIL} #{line_sans_suffix}     ")
+            print(f"FAILED {Msg.FAIL} #{line_sans_suffix}     ")
 
     if test_result.return_code != 0:
         exit(0)
@@ -286,7 +285,7 @@ def test_for_rej():
     rej_files = list(Path(".").rglob("*.rej"))
 
     if len(rej_files) > 0:
-        print(f"\n{Emo.FAIL} Found .rej files leftover from cruft update.\n")
+        print(f"\n{Msg.FAIL} Found .rej files leftover from cruft update.\n")
         for file in rej_files:
             print(f"    /{file}")
         print("\nResolve the conflicts and try again. \n")
@@ -317,10 +316,10 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     Build and view docs. If neither build or view are specified, both are run.
     """
     if not view_only:
-        echo_header(f"{Emo.DO} Building docs")
+        echo_header(f"{Msg.DO} Building docs")
         c.run("sphinx-build -b html docs docs/_build/html")
     if view or view_only:
-        echo_header(f"{Emo.EXAMINE} open docs in browser")
+        echo_header(f"{Msg.EXAMINE} open docs in browser")
         # check the OS and open the docs in the browser
         if platform.system() == "Windows":
             c.run("start docs/_build/html/index.html")
