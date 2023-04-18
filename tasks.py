@@ -22,7 +22,7 @@ new_instance_dir = "swift-python"
 
 
 @task
-def test_instantiation(c: Context):
+def test(c: Context):
     """Test that the project can be instantiated."""
     cruft_create(c)
     setup(c)
