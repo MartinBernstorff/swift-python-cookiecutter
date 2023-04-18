@@ -42,15 +42,19 @@ class Emo:
     TEST = "🧪"
     COMMUNICATE = "📣"
     EXAMINE = "🔍"
-    
+
     def replace_attribute_values_with_attribute_name(self):
+        """Replace attribute values with attribute names. Useful for Windows, which doesn't support emojis."""
         for attribute_name, attribute_value in self.__dict__.items():
             if attribute_value in self.__dict__.values():
                 self.__dict__[attribute_name] = attribute_name + ":"
-                
+
+print(platform.system())
+
 # If OS is Windows, replace emojis with attribute names
 if platform.system() == "Windows":
     Emo().replace_attribute_values_with_attribute_name()
+    
 
 
 def git_init(c: Context, branch: str = "main"):
