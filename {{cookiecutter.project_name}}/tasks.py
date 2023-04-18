@@ -32,7 +32,7 @@ def echo_header(msg: str):
 @dataclass
 class Emo:
     # We use unicode chars to support windows
-    DO = r"\U+1F916" # "🤖"
+    DO = "\U0001F916" # 🤖
     GOOD = "✅"
     FAIL = "🚨"
     WARN = "🚧"
