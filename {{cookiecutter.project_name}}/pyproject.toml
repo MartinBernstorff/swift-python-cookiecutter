@@ -64,12 +64,7 @@ repository = "https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.pro
 documentation = "https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/"
 
 [tool.pyright]
-exclude = ["**/node_modules",
-    "**/__pycache__",
-    "src/experimental",
-    "src/typestubs"
-]
-reportMissingImports = false
+exclude = [".*venv*"]
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
