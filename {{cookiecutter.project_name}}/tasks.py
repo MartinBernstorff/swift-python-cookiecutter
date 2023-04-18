@@ -31,7 +31,7 @@ def echo_header(msg: str):
 
 @dataclass
 class Msg:
-    DO = "DOING" 
+    DOING = "DOING"
     GOOD = "DONE"
     FAIL = "FAILED"
     WARN = "WARNING"
@@ -42,25 +42,12 @@ class Msg:
     COMMUNICATE = "COMMUNICATING"
     EXAMINE = "VIEWING"
 
-    def replace_attribute_values_with_attribute_name(self):
-        """Replace attribute values with attribute names. Useful for Windows, which doesn't support emojis."""
-        for attribute_name, attribute_value in self.__dict__.items():
-            if attribute_value in self.__dict__.values():
-                self.__dict__[attribute_name] = attribute_name + ":"
-
-print(platform.system())
-
-# If OS is Windows, replace emojis with attribute names
-if platform.system() == "Windows":
-    Msg().replace_attribute_values_with_attribute_name()
-    
-
 
 def git_init(c: Context, branch: str = "main"):
     """Initialize a git repository if it does not exist yet."""
     # If no .git directory exits
     if not Path(".git").exists():
-        echo_header(f"{Msg.DO} Initializing Git repository")
+        echo_header(f"{Msg.DOING} Initializing Git repository")
         c.run(f"git init -b {branch}")
         c.run("git add .")
         c.run("git commit -m 'Initial commit'")
@@ -77,7 +64,7 @@ def setup_venv(
 
     if not Path(venv_name).exists():
         echo_header(
-            f"{Msg.DO} Creating virtual environment for {python_version}{Msg.PY}",
+            f"{Msg.DOING} Creating virtual environment for {python_version}{Msg.PY}",
         )
         c.run(f"python{python_version} -m venv {venv_name}")
         print(f"{Msg.GOOD} Virtual environment created")
@@ -209,7 +196,7 @@ def pre_commit(c: Context, auto_fix: bool):
     if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
-        print(f"{Msg.DO} Fixed errors, re-running pre-commit checks")
+        print(f"{Msg.DOING} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=True, warn=True)
         exit_if_error_in_stdout(second_result)
     else:
@@ -226,7 +213,7 @@ def mypy(c: Context):
 @task
 def install(c: Context):
     """Install the project in editable mode using pip install"""
-    echo_header(f"{Msg.DO} Installing project")
+    echo_header(f"{Msg.DOING} Installing project")
     c.run("pip install -e '.[dev,tests,docs]'")
 
 
@@ -236,15 +223,15 @@ def setup(c: Context, python_version: str = "3.9"):
     git_init(c)
     venv_name = setup_venv(c, python_version=python_version)
     print(
-        f"{Msg.DO} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
+        f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
     )
-    print(f"{Msg.DO} Then install the project by running: \n\n\t\t inv install\n")
+    print(f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n")
 
 
 @task
 def update(c: Context):
     """Update dependencies."""
-    echo_header(f"{Msg.DO} Updating project")
+    echo_header(f"{Msg.DOING} Updating project")
     c.run("pip install --upgrade -e '.[dev,tests,docs]'")
 
 
@@ -316,10 +303,10 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     Build and view docs. If neither build or view are specified, both are run.
     """
     if not view_only:
-        echo_header(f"{Msg.DO} Building docs")
+        echo_header(f"{Msg.DOING}: Building docs")
         c.run("sphinx-build -b html docs docs/_build/html")
     if view or view_only:
-        echo_header(f"{Msg.EXAMINE} open docs in browser")
+        echo_header(f"{Msg.EXAMINE}: Opening docs in browser")
         # check the OS and open the docs in the browser
         if platform.system() == "Windows":
             c.run("start docs/_build/html/index.html")
