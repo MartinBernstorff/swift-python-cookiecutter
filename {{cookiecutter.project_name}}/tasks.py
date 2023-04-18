@@ -73,14 +73,14 @@ def setup_venv(
             c.run(f"python{python_version} -m venv {venv_name}")
             print(f"{Msg.GOOD} Virtual environment created")
             return venv_name
-        else:
-            # Getting at the correct python executable is a bit of a pain on Windows,
-            # so we'll just skip this step for now.
-            print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
-            return None
-    else:
-        print(f"{Msg.GOOD} Virtual environment already exists")
+        
+        # Getting at the correct python executable is a bit of a pain on Windows,
+        # so we'll just skip this step for now.
+        print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
         return None
+    
+    print(f"{Msg.GOOD} Virtual environment already exists")
+    return None
 
 
 def _add_commit(c: Context, msg: Optional[str] = None):
@@ -172,15 +172,15 @@ def update_pr(c: Context):
             c.run("gh pr view --web", pty=NOT_WINDOWS)
 
 
-def exit_if_error_in_stdout(result: Result):
+def exit_if_remaining_errors(result: Result):
     # Find N remaining using regex
 
     if "error" in result.stdout:
         errors_remaining = re.findall(r"\d+(?=( remaining))", result.stdout)[
             0
-        ]  # testing
+        ]
         if errors_remaining != "0":
-            exit(0)
+            exit(1)
 
 
 def pre_commit(c: Context, auto_fix: bool):
@@ -198,14 +198,14 @@ def pre_commit(c: Context, auto_fix: bool):
     pre_commit_cmd = "pre-commit run --all-files"
     result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
 
-    exit_if_error_in_stdout(result)
+    exit_if_remaining_errors(result)
 
     if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{Msg.DOING} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
-        exit_if_error_in_stdout(second_result)
+        exit_if_remaining_errors(second_result)
     else:
         if result.return_code != 0:
             print(f"{Msg.FAIL} Pre-commit checks failed")
