@@ -31,16 +31,16 @@ def echo_header(msg: str):
 
 @dataclass
 class Msg:
-    DOING = "DOING"
-    GOOD = "DONE"
-    FAIL = "FAILED"
-    WARN = "WARNING"
-    SYNC = "SYNCING"
+    DOING = "DOING:"
+    GOOD = "DONE:"
+    FAIL = "FAILED:"
+    WARN = "WARNING:"
+    SYNC = "SYNCING:"
     PY = ""
-    CLEAN = "CLEANING"
-    TEST = "TESTING"
-    COMMUNICATE = "COMMUNICATING"
-    EXAMINE = "VIEWING"
+    CLEAN = "CLEANING:"
+    TEST = "TESTING:"
+    COMMUNICATE = "COMMUNICATING:"
+    EXAMINE = "VIEWING:"
 
 
 def git_init(c: Context, branch: str = "main"):
