@@ -62,9 +62,8 @@ def git_init(c: Context, branch: str = "main"):
 def setup_venv(
     c: Context,
     python_version: str,
-) -> str:
+) -> Optional[str]:
     venv_name = f'.venv{python_version.replace(".", "")}'
-    
     
     if not Path(venv_name).exists():
         if NOT_WINDOWS:
@@ -73,12 +72,13 @@ def setup_venv(
             )
             c.run(f"python{python_version} -m venv {venv_name}")
             print(f"{Msg.GOOD} Virtual environment created")
+            return venv_name
         else:
             print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
+            return None
     else:
         print(f"{Msg.GOOD} Virtual environment already exists")
-
-    return venv_name
+        return None
 
 
 def _add_commit(c: Context, msg: Optional[str] = None):
@@ -231,12 +231,14 @@ def install(c: Context, args: str = "", msg: bool = True):
 def setup(c: Context, python_version: str = "3.9"):
     """Confirm that a git repo exists and setup a virtual environment."""
     git_init(c)
+    
     venv_name = setup_venv(c, python_version=python_version)
-
-    print(
-        f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
-    )
-    print(f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n")
+    
+    if venv_name is not None:
+        print(
+            f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
+        )
+        print(f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n")
 
 
 @task
