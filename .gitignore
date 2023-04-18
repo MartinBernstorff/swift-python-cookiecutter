@@ -1,4 +1,5 @@
 # Instance of cruft template created during testing
 swift-python
-
+.*venv*
 .vscode
+.venv/pyvenv.cfg

@@ -18,7 +18,6 @@ If you do not wish to use invoke you can simply delete this file.
 
 import platform
 import re
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
@@ -64,7 +63,7 @@ def setup_venv(
     python_version: str,
 ) -> Optional[str]:
     venv_name = f'.venv{python_version.replace(".", "")}'
-    
+
     if not Path(venv_name).exists():
         if NOT_WINDOWS:
             echo_header(
@@ -73,12 +72,12 @@ def setup_venv(
             c.run(f"python{python_version} -m venv {venv_name}")
             print(f"{Msg.GOOD} Virtual environment created")
             return venv_name
-        
+
         # Getting at the correct python executable is a bit of a pain on Windows,
         # so we'll just skip this step for now.
         print(f"{Msg.WARN} Virtual environment creation not supported on Windows")
         return None
-    
+
     print(f"{Msg.GOOD} Virtual environment already exists")
     return None
 
@@ -176,9 +175,7 @@ def exit_if_remaining_errors(result: Result):
     # Find N remaining using regex
 
     if "error" in result.stdout:
-        errors_remaining = re.findall(r"\d+(?=( remaining))", result.stdout)[
-            0
-        ]
+        errors_remaining = re.findall(r"\d+(?=( remaining))", result.stdout)[0]
         if errors_remaining != "0":
             exit(1)
 
@@ -233,14 +230,16 @@ def install(c: Context, args: str = "", msg: bool = True):
 def setup(c: Context, python_version: str = "3.9"):
     """Confirm that a git repo exists and setup a virtual environment."""
     git_init(c)
-    
+
     venv_name = setup_venv(c, python_version=python_version)
-    
+
     if venv_name is not None:
         print(
             f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
         )
-        print(f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n")
+        print(
+            f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n"
+        )
 
 
 @task
