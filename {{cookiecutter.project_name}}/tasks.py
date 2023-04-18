@@ -78,8 +78,6 @@ def setup_venv(
     else:
         print(f"{Msg.GOOD} Virtual environment already exists")
 
-    c.run(f"source {venv_name}/bin/activate")
-
     return venv_name
 
 
