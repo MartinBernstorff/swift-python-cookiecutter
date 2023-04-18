@@ -214,7 +214,7 @@ def mypy(c: Context):
 
 
 @task
-def install(c: Context, args: str, msg: bool = True):
+def install(c: Context, args: str = "", msg: bool = True):
     """Install the project in editable mode using pip install"""
     if msg:
         echo_header(f"{Msg.DOING} Installing project")
