@@ -18,11 +18,19 @@ If you do not wish to use invoke you can simply delete this file.
 
 import platform
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
 from invoke import Context, Result, task
+
+# Extract supported python versions from the pyproject.toml classifiers key
+SUPPORTED_PYTHON_VERSIONS = [
+    line.split("::")[-1].replace('"', "").replace(",", "").strip()
+    for line in Path("pyproject.toml").read_text().splitlines()
+    if "Programming Language :: Python ::" in line
+]
 
 
 def echo_header(msg: str):
@@ -236,24 +244,44 @@ def update(c: Context):
 
 
 @task
-def test(c: Context):
+def test(
+    c: Context,
+    python_versions: Sequence[Optional[str]] = [
+        None,
+    ],
+):
     """Run tests"""
+    # Weird default for python_versions is for invoke to infer that python-versions
+    # is an iterable. Default has to be a string, tuples are not supported.
     echo_header(f"{Emo.TEST} Running tests")
+
+    pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
+
+    if python_versions[0] is None:
+        tox_command = f"pytest {pytest_flags}"
+    else:
+        tox_environments = [f"py{v}".replace(".", "") for v in python_versions]
+        tox_env_string = ",".join(tox_environments)
+        # To maintain consistency in inputs, but outputs should match tox.ini, we remove the period
+
+        tox_command = f"tox p -e {tox_env_string} -- {pytest_flags}"
+        print(tox_command)
+
     test_result: Result = c.run(
-        "pytest -n auto -rfE --failed-first -p no:cov --disable-warnings -q",
+        tox_command,
         warn=True,
         pty=True,
     )
 
-    # If "failed" in the pytest results
-    if "failed" in test_result.stdout:
+    failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
+
+    print(failed_tests)
+
+    if len(failed_tests) > 0:
         print("\n\n\n")
         echo_header("Failed tests")
 
         # Get lines with "FAILED" in them from the .pytest_results file
-        failed_tests = [
-            line for line in test_result.stdout if line.startswith("FAILED")
-        ]
 
         for line in failed_tests:
             # Remove from start of line until /test_
@@ -292,7 +320,7 @@ def pr(c: Context, auto_fix: bool = False):
     """Run all checks and update the PR."""
     add_and_commit(c)
     lint(c, auto_fix=auto_fix)
-    test(c)
+    test(c, python_versions=SUPPORTED_PYTHON_VERSIONS)
     update_branch(c)
     update_pr(c)
 

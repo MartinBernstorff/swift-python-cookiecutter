@@ -13,7 +13,6 @@ classifiers = [
   "Operating System :: POSIX :: Linux",
   "Operating System :: MacOS :: MacOS X",
   "Operating System :: Microsoft :: Windows",
-  "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10"
 ]
@@ -42,6 +41,7 @@ tests = [
   "pytest-cov>=3.0.0,<3.1.0",
   "pytest-xdist>=3.0.0,<3.2.0",
   "pytest-sugar>=0.9.4,<0.10.0",
+  "tox",
 ]
 docs = [
   "sphinx>=5.3.0,<5.4.0",
@@ -166,3 +166,17 @@ build_command = "python -m pip install build; python -m build"
 
 [tool.setuptools]
 include-package-data = true
+
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py{39,310}
+
+[testenv]
+description: run unit tests
+deps =
+  .[tests]
+commands =
+  pytest {posargs:tests}
+"""
