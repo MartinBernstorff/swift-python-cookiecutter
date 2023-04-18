@@ -238,7 +238,7 @@ def setup(c: Context, python_version: str = "3.9"):
             f"{Msg.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
         )
         print(
-            f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n"
+            f"{Msg.DOING} Then install the project by running: \n\n\t\t inv install\n",
         )
 
 
