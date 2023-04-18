@@ -28,4 +28,4 @@ jobs:
         run: |
           # Using invoke allows testing locally as well
           pip install invoke
-          inv test-instantiation
+          inv test
