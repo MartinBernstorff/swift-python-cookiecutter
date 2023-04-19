@@ -244,9 +244,10 @@ def pre_commit(c: Context, auto_fix: bool):
             exit(1)
 
 
-def mypy(c: Context):
-    echo_header(f"{msg_type.CLEAN} Running mypy")
-    c.run("mypy .", pty=NOT_WINDOWS)
+@task
+def static_type_checks(c: Context):
+    echo_header(f"{msg_type.CLEAN} Running static type checks")
+    c.run("pyright .", pty=NOT_WINDOWS)
 
 
 @task
@@ -343,7 +344,7 @@ def lint(c: Context, auto_fix: bool = False):
     """Lint the project using the pre-commit hooks and mypy."""
     test_for_rej()
     pre_commit(c=c, auto_fix=auto_fix)
-    mypy(c)
+    static_type_checks(c)
 
 
 @task
