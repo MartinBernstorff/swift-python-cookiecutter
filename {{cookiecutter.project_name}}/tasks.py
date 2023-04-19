@@ -281,7 +281,7 @@ def test_for_rej():
 
 @task
 def lint(c: Context, auto_fix: bool = False):
-    """Lint the project using the pre-commit hooks and mypy."""
+    """Lint the project."""
     test_for_rej()
     pre_commit(c=c, auto_fix=auto_fix)
     static_type_checks(c)
