@@ -255,10 +255,10 @@ def test(
 
     pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
     run_mode = "p" if len(python_versions) > 1 else "r"
-        
+
     tox_py_envs = [f"py{v}".replace(".", "") for v in python_versions]
     tox_env_arg_string = ",".join(tox_py_envs)
-    # Remove period so that the input can be e.g. 3.9 like other functions, while 
+    # Remove period so that the input can be e.g. 3.9 like other functions, while
     # tox receives the required 39
 
     tox_command = f"tox {run_mode} -e {tox_env_arg_string} -- {pytest_flags}"
