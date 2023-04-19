@@ -2,4 +2,3 @@
 swift-python
 .*venv*
 .vscode
-.venv/pyvenv.cfg
