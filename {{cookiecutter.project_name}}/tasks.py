@@ -27,7 +27,7 @@ from invoke import Context, Result, task
 
 # Extract supported python versions from the pyproject.toml classifiers key
 SUPPORTED_PYTHON_VERSIONS = [
-    line.split("::")[-1].replace('"', "").replace(",", "").strip()
+    line.split("::")[-1].strip().replace('"', "").replace(",", "")
     for line in Path("pyproject.toml").read_text().splitlines()
     if "Programming Language :: Python ::" in line
 ]
@@ -246,7 +246,7 @@ def update(c: Context):
 @task
 def test(
     c: Context,
-    python_versions: Sequence[Optional[str]] = [
+    python_versions: Sequence[str] = [ # type: ignore
         None,
     ],
 ):
@@ -258,16 +258,19 @@ def test(
     pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
 
     if len(python_versions) == 0:
-        tox_python_versions = SUPPORTED_PYTHON_VERSIONS[0]
+        tox_python_versions: Sequence[str] = [SUPPORTED_PYTHON_VERSIONS[0]]
         # Invoke passes an empty list if no arguments are passed, even if the default argument is a list with a None
+    else:
+        tox_python_versions = python_versions
         
-    tox_python_versions = python_versions
+    run_mode = "p" if len(tox_python_versions) > 1 else "r"
+        
     tox_py_envs = [f"py{v}".replace(".", "") for v in tox_python_versions]
     tox_env_arg_string = ",".join(tox_py_envs)
     # Remove period so that the input can be e.g. 3.9 like other functions, while 
     # tox receives the required 39
 
-    tox_command = f"tox p -e {tox_env_arg_string} -- {pytest_flags}"
+    tox_command = f"tox {run_mode} -e {tox_env_arg_string} -- {pytest_flags}"
 
     test_result: Result = c.run(
         tox_command,
