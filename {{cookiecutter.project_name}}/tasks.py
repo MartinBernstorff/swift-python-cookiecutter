@@ -215,15 +215,15 @@ def mypy(c: Context):
 
 
 @task
-def install(c: Context, args: str = "", msg: bool = True):
+def install(c: Context, pip_args: str = "", msg: bool = True):
     """Install the project in editable mode using pip install"""
     if msg:
         echo_header(f"{Msg.DOING} Installing project")
 
     if NOT_WINDOWS:
-        c.run(f"pip install -e '.[dev,tests,docs]' {args}")
+        c.run(f"pip install -e '.[dev,tests,docs]' {pip_args}")
     else:
-        c.run(f"pip install -e .[dev,tests,docs] {args}")
+        c.run(f"pip install -e .[dev,tests,docs] {pip_args}")
 
 
 @task
@@ -246,7 +246,7 @@ def setup(c: Context, python_version: str = "3.9"):
 def update(c: Context):
     """Update dependencies."""
     echo_header(f"{Msg.DOING} Updating project")
-    install(c, args="--upgrade", msg=False)
+    install(c, pip_args="--upgrade", msg=False)
 
 
 @task
