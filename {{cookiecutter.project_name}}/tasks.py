@@ -207,7 +207,7 @@ def pre_commit(c: Context, auto_fix: bool):
 
 def static_type_checks(c: Context):
     echo_header(f"{Emo.CLEAN} Running static type checks")
-    c.run("pyright .", pty=True)
+    c.run("pyright-polite .", pty=True)
 
 
 @task
