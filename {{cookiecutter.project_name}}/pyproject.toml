@@ -67,6 +67,7 @@ documentation = "https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.p
 
 [tool.pyright]
 exclude = [".*venv*"]
+pythonPlatform = "Darwin"
 
 [tool.ruff]
 # Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
