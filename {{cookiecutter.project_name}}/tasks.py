@@ -263,7 +263,7 @@ def install(c: Context, pip_args: str = "", msg: bool = True):
 
 
 @task
-def setup(c: Context, python: Optional[str]):
+def setup(c: Context, python: Optional[str]= None):
     """Confirm that a git repo exists and setup a virtual environment.
     
     Args:
