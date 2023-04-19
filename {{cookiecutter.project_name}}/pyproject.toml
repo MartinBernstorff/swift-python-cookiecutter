@@ -175,7 +175,6 @@ envlist = py{39,310}
 
 [testenv]
 description: run unit tests
-use_develop = true
 extras = tests
 commands =
   pytest {posargs:tests}
