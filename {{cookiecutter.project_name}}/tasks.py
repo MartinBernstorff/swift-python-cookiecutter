@@ -246,9 +246,7 @@ def update(c: Context):
 @task
 def test(
     c: Context,
-    python_versions: Sequence[str] = [ # type: ignore
-        None,
-    ],
+    python_versions: Sequence[str] = [SUPPORTED_PYTHON_VERSIONS[0]],
 ):
     """Run tests"""
     # Weird default for python_versions is for invoke to infer that python-versions
@@ -256,16 +254,9 @@ def test(
     echo_header(f"{Emo.TEST} Running tests")
 
     pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
-
-    if len(python_versions) == 0:
-        tox_python_versions: Sequence[str] = [SUPPORTED_PYTHON_VERSIONS[0]]
-        # Invoke passes an empty list if no arguments are passed, even if the default argument is a list with a None
-    else:
-        tox_python_versions = python_versions
+    run_mode = "p" if len(python_versions) > 1 else "r"
         
-    run_mode = "p" if len(tox_python_versions) > 1 else "r"
-        
-    tox_py_envs = [f"py{v}".replace(".", "") for v in tox_python_versions]
+    tox_py_envs = [f"py{v}".replace(".", "") for v in python_versions]
     tox_env_arg_string = ",".join(tox_py_envs)
     # Remove period so that the input can be e.g. 3.9 like other functions, while 
     # tox receives the required 39
