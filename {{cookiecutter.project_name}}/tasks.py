@@ -32,47 +32,47 @@ def echo_header(msg: str):
 class MsgType:
     
     @property
-    def is_windows(self):
+    def is_windows(self) -> bool:
         return platform.system() == "Windows"
     
     @property
-    def DOING(self):
+    def DOING(self) -> str:
         return "DOING:" if self.is_windows else b'\xf0\x9f\xa4\x96'.decode()
 
     @property
-    def GOOD(self):
+    def GOOD(self) -> str:
         return "DONE:" if self.is_windows else b'\xe2\x9c\x85'.decode()
     
     @property
-    def FAIL(self):
+    def FAIL(self) -> str:
         return "FAILED:" if self.is_windows else b'\xf0\x9f\x9a\xa8'.decode()
     
     @property
-    def WARN(self):
+    def WARN(self) -> str:
         return "WARNING:" if self.is_windows else b'\xf0\x9f\x9a\xa7'.decode()
     
     @property
-    def SYNC(self):
+    def SYNC(self) -> str:
         return "SYNCING:" if self.is_windows else b'\xf0\x9f\x9a\x82'.decode()
     
     @property
-    def PY(self):
+    def PY(self) -> str:
         return "" if self.is_windows else b'\xf0\x9f\x90\x8d'.decode()
     
     @property
-    def CLEAN(self):
+    def CLEAN(self) -> str:
         return "CLEANING:" if self.is_windows else b'\xf0\x9f\xa7\xb9'.decode()
     
     @property
-    def TEST(self):
+    def TEST(self) -> str:
         return "TESTING:" if self.is_windows else b'\xf0\x9f\xa7\xaa'.decode()
     
     @property
-    def COMMUNICATE(self):
+    def COMMUNICATE(self) -> str:
         return "COMMUNICATING:" if self.is_windows else b'\xf0\x9f\x93\xa3'.decode()
     
     @property
-    def EXAMINE(self):
+    def EXAMINE(self) -> str:
         return "VIEWING:" if self.is_windows else b'\xf0\x9f\x94\x8d'.decode()
 
 msg_type = MsgType()
