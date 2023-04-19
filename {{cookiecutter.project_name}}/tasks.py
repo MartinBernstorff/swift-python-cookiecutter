@@ -29,51 +29,52 @@ NOT_WINDOWS = platform.system() != "Windows"
 def echo_header(msg: str):
     print(f"\n--- {msg} ---")
 
+
 class MsgType:
-    
     @property
     def is_windows(self) -> bool:
         return platform.system() == "Windows"
-    
+
     @property
     def DOING(self) -> str:
-        return "DOING:" if self.is_windows else b'\xf0\x9f\xa4\x96'.decode()
+        return "DOING:" if self.is_windows else b"\xf0\x9f\xa4\x96".decode()
 
     @property
     def GOOD(self) -> str:
-        return "DONE:" if self.is_windows else b'\xe2\x9c\x85'.decode()
-    
+        return "DONE:" if self.is_windows else b"\xe2\x9c\x85".decode()
+
     @property
     def FAIL(self) -> str:
-        return "FAILED:" if self.is_windows else b'\xf0\x9f\x9a\xa8'.decode()
-    
+        return "FAILED:" if self.is_windows else b"\xf0\x9f\x9a\xa8".decode()
+
     @property
     def WARN(self) -> str:
-        return "WARNING:" if self.is_windows else b'\xf0\x9f\x9a\xa7'.decode()
-    
+        return "WARNING:" if self.is_windows else b"\xf0\x9f\x9a\xa7".decode()
+
     @property
     def SYNC(self) -> str:
-        return "SYNCING:" if self.is_windows else b'\xf0\x9f\x9a\x82'.decode()
-    
+        return "SYNCING:" if self.is_windows else b"\xf0\x9f\x9a\x82".decode()
+
     @property
     def PY(self) -> str:
-        return "" if self.is_windows else b'\xf0\x9f\x90\x8d'.decode()
-    
+        return "" if self.is_windows else b"\xf0\x9f\x90\x8d".decode()
+
     @property
     def CLEAN(self) -> str:
-        return "CLEANING:" if self.is_windows else b'\xf0\x9f\xa7\xb9'.decode()
-    
+        return "CLEANING:" if self.is_windows else b"\xf0\x9f\xa7\xb9".decode()
+
     @property
     def TEST(self) -> str:
-        return "TESTING:" if self.is_windows else b'\xf0\x9f\xa7\xaa'.decode()
-    
+        return "TESTING:" if self.is_windows else b"\xf0\x9f\xa7\xaa".decode()
+
     @property
     def COMMUNICATE(self) -> str:
-        return "COMMUNICATING:" if self.is_windows else b'\xf0\x9f\x93\xa3'.decode()
-    
+        return "COMMUNICATING:" if self.is_windows else b"\xf0\x9f\x93\xa3".decode()
+
     @property
     def EXAMINE(self) -> str:
-        return "VIEWING:" if self.is_windows else b'\xf0\x9f\x94\x8d'.decode()
+        return "VIEWING:" if self.is_windows else b"\xf0\x9f\x94\x8d".decode()
+
 
 msg_type = MsgType()
 
@@ -94,10 +95,10 @@ def git_init(c: Context, branch: str = "main"):
 def setup_venv(
     c: Context,
     python: str,
-    venv_name : Optional[str] = None,
+    venv_name: Optional[str] = None,
 ) -> str:
     """Create a virtual environment if it does not exist yet.
-    
+
     Args:
         c: The invoke context.
         python: The python executable to use.
@@ -263,10 +264,11 @@ def install(c: Context, pip_args: str = "", msg: bool = True):
 
 
 @task
-def setup(c: Context, python: Optional[str]= None):
+def setup(c: Context, python: Optional[str] = None):
     """Confirm that a git repo exists and setup a virtual environment.
-    
+
     Args:
+        c: Invoke context
         python: Path to the python executable to use for the virtual environment.
     """
     git_init(c)
