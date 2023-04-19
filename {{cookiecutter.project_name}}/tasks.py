@@ -20,7 +20,7 @@ import platform
 import re
 from pathlib import Path
 from typing import Optional
-
+import shutil
 from invoke import Context, Result, task
 
 NOT_WINDOWS = platform.system() != "Windows"
@@ -262,7 +262,7 @@ def install(c: Context, pip_args: str = "", msg: bool = True):
 
 
 @task
-def setup(c: Context, python: str = "python3.9"):
+def setup(c: Context, python: Optional[str]):
     """Confirm that a git repo exists and setup a virtual environment.
     
     Args:
@@ -270,6 +270,12 @@ def setup(c: Context, python: str = "python3.9"):
     """
     git_init(c)
 
+    if python is None:
+        # get path to python executable
+        python = shutil.which("python")
+        if not python:
+            print(f"{msg_type.FAIL} Python executable not found")
+            exit(1)
     venv_name = setup_venv(c, python=python)
 
     if venv_name is not None:
