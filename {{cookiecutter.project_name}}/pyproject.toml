@@ -179,3 +179,6 @@ extras = tests
 commands =
   pytest {posargs:tests}
 """
+
+[tool.pyright]
+exclude = [".*venv*", ".tox"]
