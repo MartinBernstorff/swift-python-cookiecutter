@@ -93,26 +93,28 @@ def git_init(c: Context, branch: str = "main"):
 
 def setup_venv(
     c: Context,
-    python_version: str,
-) -> Optional[str]:
-    venv_name = f'.venv{python_version.replace(".", "")}'
+    python: str,
+    venv_name : Optional[str] = None,
+) -> str:
+    """Create a virtual environment if it does not exist yet.
+    
+    Args:
+        c: The invoke context.
+        python: The python executable to use.
+        venv_name: The name of the virtual environment. Defaults to ".venv".
+    """
+    if venv_name is None:
+        venv_name = ".venv"
 
     if not Path(venv_name).exists():
-        if NOT_WINDOWS:
-            echo_header(
-                f"{msg_type.DOING} Creating virtual environment for {python_version}{msg_type.PY}",
-            )
-            c.run(f"python{python_version} -m venv {venv_name}")
-            print(f"{msg_type.GOOD} Virtual environment created")
-            return venv_name
-
-        # Getting at the correct python executable is a bit of a pain on Windows,
-        # so we'll just skip this step for now.
-        print(f"{msg_type.WARN} Virtual environment creation not supported on Windows")
-        return None
-
-    print(f"{msg_type.GOOD} Virtual environment already exists")
-    return None
+        echo_header(
+            f"{msg_type.DOING} Creating virtual environment using {msg_type.PY}:{python}",
+        )
+        c.run(f"{python} -m venv {venv_name}")
+        print(f"{msg_type.GOOD} Virtual environment created")
+    else:
+        print(f"{msg_type.GOOD} Virtual environment already exists")
+    return venv_name
 
 
 def _add_commit(c: Context, msg: Optional[str] = None):
@@ -260,11 +262,15 @@ def install(c: Context, pip_args: str = "", msg: bool = True):
 
 
 @task
-def setup(c: Context, python_version: str = "3.9"):
-    """Confirm that a git repo exists and setup a virtual environment."""
+def setup(c: Context, python: str = "python3.9"):
+    """Confirm that a git repo exists and setup a virtual environment.
+    
+    Args:
+        python: Path to the python executable to use for the virtual environment.
+    """
     git_init(c)
 
-    venv_name = setup_venv(c, python_version=python_version)
+    venv_name = setup_venv(c, python=python)
 
     if venv_name is not None:
         print(
