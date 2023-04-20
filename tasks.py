@@ -16,7 +16,6 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
-import os
 import shutil
 from pathlib import Path
 
@@ -28,16 +27,13 @@ new_instance_dir = Path("swift-python")
 @task
 def setup_instance(c: Context):
     """Setup while instantiating the project."""
-    shutil.rmtree(new_instance_dir)
-
-    for invoke_command in ["setup", "install", "lint", "test", "docs"]:
-        c.run(f"inv {invoke_command}")
+    with c.cd(new_instance_dir):
+        for invoke_command in ["setup", "install", "lint", "test", "docs"]:
+            c.run(f"inv {invoke_command}")
 
 
 @task
 def cruft_create(c: Context):
-    new_instance_dir.rmdir()
-
     if shutil.which("cruft") is None:
         c.run("pip install cruft")
     c.run("cruft create . -y")
@@ -46,20 +42,22 @@ def cruft_create(c: Context):
 @task
 def test_instantiation(c: Context):
     """Test that the project can be instantiated."""
+    shutil.rmtree(new_instance_dir)
     cruft_create(c)
     setup_instance(c)
 
 
 @task
 def lint(c: Context):
-    c.run("rm -f pyproject.toml")
+    top_toml_path = Path("pyproject.toml")
+    top_toml_path.unlink()
     c.run("black .")
 
     # Copy the file from {\{\{cookiecutter.project_name\}\}}/pyproject.toml to pyproject.toml
-    c.run(r"cp \{\{cookiecutter.project_name\}\}/pyproject.toml pyproject.toml")
+    shutil.copy(Path("{{cookiecutter.project_name}}/pyproject.toml"), top_toml_path)
 
     # Remove all lines starting with {% and ending with %}
-    with Path("pyproject.toml").open("r") as f:
+    with top_toml_path.open("r") as f:
         content = f.read()
         content = "\n".join(
             [line for line in content.split("\n") if not line.startswith("{%")],
@@ -69,7 +67,7 @@ def lint(c: Context):
         content = content.split("[tool.ruff]")[1].split("[tool.semantic_release]")[0]
         content = "[tool.ruff]" + content
 
-    with Path("pyproject.toml").open("w") as f:
+    with top_toml_path.open("w") as f:
         f.write(content)
 
     c.run("ruff check . --fix --config pyproject.toml")
