@@ -25,7 +25,7 @@ new_instance_dir = "swift-python"
 
 
 @task
-def setup(c: Context):
+def setup_instance(c: Context):
     """Setup while instantiating the project."""
     for invoke_command in ["setup", "install", "lint", "test", "docs"]:
         c.run(f"cd {new_instance_dir} && inv {invoke_command}")
@@ -44,7 +44,7 @@ def cruft_create(c: Context):
 def test_instantiation(c: Context):
     """Test that the project can be instantiated."""
     cruft_create(c)
-    setup(c)
+    setup_instance(c)
 
 
 @task
