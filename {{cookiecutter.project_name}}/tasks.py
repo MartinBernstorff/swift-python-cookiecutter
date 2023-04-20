@@ -287,8 +287,7 @@ def get_python_path(preferred_version: str) -> str | None:
 
     if "y" in prompt.lower():
         return shutil.which("python")
-    else:
-        exit(1)
+    exit(1)
 
 
 @task
