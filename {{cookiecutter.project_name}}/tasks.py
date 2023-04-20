@@ -99,7 +99,7 @@ def setup_venv(
 
     Args:
         c: The invoke context.
-        python: The python executable to use.
+        python_path: The python executable to use.
         venv_name: The name of the virtual environment. Defaults to ".venv".
     """
     if venv_name is None:
@@ -274,20 +274,21 @@ def install(
     c.run(install_cmd)
 
 
-def get_python_path(preferred_version: str):
+def get_python_path(preferred_version: str) -> str | None:
+    """Get path to python executable."""
     preferred_version_path = shutil.which(f"python{preferred_version}")
 
     if preferred_version_path is not None:
         return preferred_version_path
-    else:
-        prompt = input(
-            f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)"
-        )
 
-        if "y" in prompt.lower():
-            return shutil.which("python")
-        else:
-            exit(1)
+    prompt = input(
+        f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)"
+    )
+
+    if "y" in prompt.lower():
+        return shutil.which("python")
+    else:
+        exit(1)
 
 
 @task
@@ -296,7 +297,7 @@ def setup(c: Context, python_path: Optional[str] = None):
 
     Args:
         c: Invoke context
-        python: Path to the python executable to use for the virtual environment. Uses the return value of `which python` if not provided.
+        python_path: Path to the python executable to use for the virtual environment. Uses the return value of `which python` if not provided.
     """
     git_init(c)
 
@@ -308,6 +309,8 @@ def setup(c: Context, python_path: Optional[str] = None):
             exit(1)
     venv_name = setup_venv(c, python_path=python_path)
 
+    install(c, pip_args="--upgrade", msg=False, venv_path=venv_name)
+
     if venv_name is not None:
         print(
             f"{msg_type.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
@@ -315,8 +318,6 @@ def setup(c: Context, python_path: Optional[str] = None):
         print(
             f"{msg_type.DOING} Then install the project by running: \n\n\t\t inv install\n",
         )
-
-    install(c, pip_args="--upgrade", msg=False, venv_path=venv_name)
 
 
 @task
