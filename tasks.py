@@ -16,8 +16,8 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from invoke import Context, task
 
@@ -62,13 +62,14 @@ def lint(c: Context):
             [line for line in content.split("\n") if not line.startswith("{%")],
         )
 
+        # Keep only stuffbetween [tool.ruff] and the next [tool.semantic_release]
+        content = content.split("[tool.ruff]")[1].split("[tool.semantic_release]")[0]
+        content = "[tool.ruff]" + content
+
     with Path("pyproject.toml").open("w") as f:
         f.write(content)
 
     c.run("ruff check . --fix --config pyproject.toml")
-
-    # Delete the file
-    c.run("rm -f pyproject.toml")
 
 
 @task
