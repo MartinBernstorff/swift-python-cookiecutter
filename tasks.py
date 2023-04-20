@@ -16,7 +16,6 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
-import shutil
 from invoke import Context, task
 
 new_instance_dir = "swift-python"
