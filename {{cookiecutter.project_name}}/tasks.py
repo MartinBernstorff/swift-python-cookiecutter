@@ -270,7 +270,7 @@ def setup(c: Context, python: Optional[str] = None):
 
     Args:
         c: Invoke context
-        python: Path to the python executable to use for the virtual environment.
+        python: Path to the python executable to use for the virtual environment. Uses the currently active python if none are specified.
     """
     git_init(c)
 
