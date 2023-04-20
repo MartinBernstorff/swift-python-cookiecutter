@@ -284,8 +284,8 @@ def get_python_path(preferred_version: str) -> Optional[str]:
     if preferred_version_path is not None:
         return preferred_version_path
 
-    prompt = input(
-        f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)",
+    print(
+        f"{msg_type.WARN}: python{preferred_version} not found, continuing with default python version"
     )
 
     if "y" in prompt.lower():
