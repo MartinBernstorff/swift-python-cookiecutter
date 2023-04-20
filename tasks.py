@@ -54,6 +54,5 @@ def lint(c):
 @task
 def pr(c: Context):
     """Create a pull request on GitHub."""
-    print(shutil.which("pip"))
     lint(c)
     test_instantiation(c)

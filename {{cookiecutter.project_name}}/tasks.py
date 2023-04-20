@@ -250,9 +250,7 @@ def static_type_checks(c: Context):
 
 
 @task
-def install(
-    c: Context, pip_args: str = "", msg: bool = True, venv_path: Optional[str] = None
-):
+def install(c: Context, pip_args: str = "", msg: bool = True, venv_path: Optional[str] = None):
     """Install the project in editable mode using pip install"""
     if msg:
         echo_header(f"{msg_type.DOING} Installing project")
@@ -260,11 +258,7 @@ def install(
     extras = ".[dev,tests,docs]" if NOT_WINDOWS else ".[dev,tests,docs]"
     install_cmd = f"pip install -e {extras} {pip_args}"
 
-    venv_cmd = (
-        f"source {venv_path}/bin/activate"
-        if NOT_WINDOWS
-        else f"source {venv_path}/Scripts/activate"
-    )
+    venv_cmd = f"source {venv_path}/bin/activate" if NOT_WINDOWS else f"source {venv_path}/Scripts/activate"
 
     if venv_path is not None:
         with c.prefix(venv_cmd):
@@ -281,9 +275,7 @@ def get_python_path(preferred_version: str) -> str | None:
     if preferred_version_path is not None:
         return preferred_version_path
 
-    prompt = input(
-        f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)"
-    )
+    prompt = input(f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)")
 
     if "y" in prompt.lower():
         return shutil.which("python")
@@ -343,9 +335,7 @@ def test(c: Context):
         echo_header("Failed tests")
 
         # Get lines with "FAILED" in them from the .pytest_results file
-        failed_tests = [
-            line for line in test_result.stdout if line.startswith("FAILED")
-        ]
+        failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
 
         for line in failed_tests:
             # Remove from start of line until /test_
