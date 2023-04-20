@@ -6,9 +6,16 @@ on:
 
 jobs:
   create-template-instance:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest] # macos-latest
+        python-version: ["3.9"] # , "3.10"]
+
+    # runs-on: ubuntu-latest
     concurrency:
-      group: "${{ github.workflow }} @ ${{ github.ref }}"
+      group: "${{ github.workflow }} @ ${{ github.ref }} with ${{ matrix.python-version }} on ${{ matrix.os}}"
+      cancel-in-progress: true
 
     steps:
       - name: Checkout code
@@ -22,7 +29,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: ${{ matrix.python-version }}
 
       - name: Cruft create
         run: |
