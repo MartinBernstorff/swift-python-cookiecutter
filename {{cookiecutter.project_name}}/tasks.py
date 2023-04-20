@@ -18,9 +18,8 @@ If you do not wish to use invoke you can simply delete this file.
 
 import platform
 import re
-from collections.abc import Sequence
-from dataclasses import dataclass
 import shutil
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Optional
 
@@ -32,6 +31,8 @@ SUPPORTED_PYTHON_VERSIONS = [
     for line in Path("pyproject.toml").read_text().splitlines()
     if "Programming Language :: Python ::" in line
 ]
+
+NOT_WINDOWS = platform.system() != "Windows"
 
 
 def echo_header(msg: str):
