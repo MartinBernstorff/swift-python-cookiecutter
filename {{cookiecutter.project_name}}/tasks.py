@@ -251,7 +251,10 @@ def static_type_checks(c: Context):
 
 @task
 def install(
-    c: Context, pip_args: str = "", msg: bool = True, venv_path: Optional[str] = None
+    c: Context,
+    pip_args: str = "",
+    msg: bool = True,
+    venv_path: Optional[str] = None,
 ):
     """Install the project in editable mode using pip install"""
     if msg:
@@ -282,7 +285,7 @@ def get_python_path(preferred_version: str) -> str | None:
         return preferred_version_path
 
     prompt = input(
-        f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)"
+        f"{msg_type.WARN}: python{preferred_version} not found, do you want to continue using the result of `which python`? (y/n)",
     )
 
     if "y" in prompt.lower():

@@ -16,6 +16,8 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
+from pathlib import Path
+
 from invoke import Context, task
 
 new_instance_dir = "swift-python"
@@ -29,7 +31,7 @@ def setup(c: Context):
 
 
 @task
-def cruft_create(c):
+def cruft_create(c: Context):
     c.run(f"rm -rf {new_instance_dir}")
 
     c.run("pip install cruft")
@@ -44,10 +46,27 @@ def test_instantiation(c: Context):
 
 
 @task
-def lint(c):
+def lint(c: Context):
+    c.run("rm -f pyproject.toml")
     c.run("black .")
-    c.run("ruff check . --isolated --fix --line-length=1000")
-    # --isolated to ignore pyproject.toml with cookiecutter placeholders, which are not valid TOML
+
+    # Copy the file from {\{\{cookiecutter.project_name\}\}}/pyproject.toml to pyproject.toml
+    c.run(r"cp \{\{cookiecutter.project_name\}\}/pyproject.toml pyproject.toml")
+
+    # Remove all lines starting with {% and ending with %}
+    with Path("pyproject.toml").open("r") as f:
+        content = f.read()
+        content = "\n".join(
+            [line for line in content.split("\n") if not line.startswith("{%")],
+        )
+
+    with Path("pyproject.toml").open("w") as f:
+        f.write(content)
+
+    c.run("ruff check . --fix --config pyproject.toml")
+
+    # Delete the file
+    c.run("rm -f pyproject.toml")
 
 
 @task
