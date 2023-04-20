@@ -207,7 +207,7 @@ def pre_commit(c: Context, auto_fix: bool):
 
 def static_type_checks(c: Context):
     echo_header(f"{Emo.CLEAN} Running static type checks")
-    c.run("pyright .", pty=True)
+    c.run("pyright-polite .", pty=True)
 
 
 @task
@@ -281,7 +281,7 @@ def test_for_rej():
 
 @task
 def lint(c: Context, auto_fix: bool = False):
-    """Lint the project using the pre-commit hooks and mypy."""
+    """Lint the project."""
     test_for_rej()
     pre_commit(c=c, auto_fix=auto_fix)
     static_type_checks(c)
