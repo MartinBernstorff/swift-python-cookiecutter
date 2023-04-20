@@ -17,6 +17,7 @@ If you do not wish to use invoke you can simply delete this file.
 
 
 from pathlib import Path
+import shutil
 
 from invoke import Context, task
 
@@ -34,7 +35,8 @@ def setup(c: Context):
 def cruft_create(c: Context):
     c.run(f"rm -rf {new_instance_dir}")
 
-    c.run("pip install cruft")
+    if shutil.which("cruft") is None:
+        c.run("pip install cruft")
     c.run("cruft create . -y")
 
 
