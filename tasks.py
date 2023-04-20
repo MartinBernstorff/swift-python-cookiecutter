@@ -16,24 +16,27 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
+import os
 import shutil
 from pathlib import Path
 
 from invoke import Context, task
 
-new_instance_dir = "swift-python"
+new_instance_dir = Path("swift-python")
 
 
 @task
 def setup_instance(c: Context):
     """Setup while instantiating the project."""
+    shutil.rmtree(new_instance_dir)
+
     for invoke_command in ["setup", "install", "lint", "test", "docs"]:
-        c.run(f"cd {new_instance_dir} && inv {invoke_command}")
+        c.run(f"inv {invoke_command}")
 
 
 @task
 def cruft_create(c: Context):
-    c.run(f"rm -rf {new_instance_dir}")
+    new_instance_dir.rmdir()
 
     if shutil.which("cruft") is None:
         c.run("pip install cruft")
