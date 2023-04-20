@@ -42,7 +42,9 @@ def cruft_create(c: Context):
 @task
 def test_instantiation(c: Context):
     """Test that the project can be instantiated."""
-    shutil.rmtree(new_instance_dir)
+    if new_instance_dir.exists():
+        shutil.rmtree(new_instance_dir)
+
     cruft_create(c)
     setup_instance(c)
 
