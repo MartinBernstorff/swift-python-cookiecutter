@@ -16,24 +16,17 @@ If you do not wish to use invoke you can simply delete this file.
 """
 
 
+import shutil
 from invoke import Context, task
 
 new_instance_dir = "swift-python"
 
 
 @task
-def test_instantiation(c: Context):
-    """Test that the project can be instantiated."""
-    cruft_create(c)
-    setup(c)
-
-
-@task
-def lint(c):
-    c.run("black .")
-    c.run(
-        "ruff check . --isolated --fix"
-    )  # --isolated to ignore pyproject.toml with cookiecutter placeholders, which are not valid TOML
+def setup(c: Context):
+    """Setup while instantiating the project."""
+    for invoke_command in ["setup", "install", "lint", "test", "docs"]:
+        c.run(f"cd {new_instance_dir} && inv {invoke_command}")
 
 
 @task
@@ -45,7 +38,22 @@ def cruft_create(c):
 
 
 @task
-def setup(c: Context):
-    """Setup while instantiating the project."""
-    for invoke_command in ["setup", "install", "lint", "test", "docs"]:
-        c.run(f"cd {new_instance_dir} && inv {invoke_command}")
+def test_instantiation(c: Context):
+    """Test that the project can be instantiated."""
+    cruft_create(c)
+    setup(c)
+
+
+@task
+def lint(c):
+    c.run("black . --line-length 1000")
+    c.run("ruff check . --isolated --fix --line-length=1000")
+    # --isolated to ignore pyproject.toml with cookiecutter placeholders, which are not valid TOML
+
+
+@task
+def pr(c: Context):
+    """Create a pull request on GitHub."""
+    print(shutil.which("pip"))
+    lint(c)
+    test_instantiation(c)
