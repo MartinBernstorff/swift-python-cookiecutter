@@ -66,7 +66,7 @@ repository = "https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.pro
 documentation = "https://{{cookiecutter.github_user}}.github.io/{{cookiecutter.project_name}}/"
 
 [tool.pyright]
-exclude = [".*venv*"]
+exclude = [".*venv*", ".tox"]
 pythonPlatform = "Darwin"
 
 [tool.ruff]
@@ -174,6 +174,3 @@ extras = tests
 commands =
   pytest {posargs:tests}
 """
-
-[tool.pyright]
-exclude = [".*venv*", ".tox"]
