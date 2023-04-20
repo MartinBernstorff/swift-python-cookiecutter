@@ -246,7 +246,7 @@ def pre_commit(c: Context, auto_fix: bool):
 
         print(f"{msg_type.DOING} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
-        exit_if_remaining_errors(second_result)
+        exit_if_error_in_stdout(second_result)
     else:
         if result.return_code != 0:
             print(f"{msg_type.FAIL} Pre-commit checks failed")
