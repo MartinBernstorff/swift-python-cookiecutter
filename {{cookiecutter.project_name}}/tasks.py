@@ -138,7 +138,7 @@ def _add_commit(c: Context, msg: Optional[str] = None):
 def is_uncommitted_changes(c: Context) -> bool:
     git_status_result: Result = c.run(
         "git status --porcelain",
-        pty=True,
+        pty=NOT_WINDOWS,
         hide=True,
     )
 
@@ -151,7 +151,7 @@ def add_and_commit(c: Context, msg: Optional[str] = None):
     if is_uncommitted_changes(c):
         uncommitted_changes_descr = c.run(
             "git status --porcelain",
-            pty=True,
+            pty=NOT_WINDOWS,
             hide=True,
         ).stdout
 
@@ -191,7 +191,7 @@ def update_branch(c: Context):
 def create_pr(c: Context):
     c.run(
         "gh pr create --web",
-        pty=True,
+        pty=NOT_WINDOWS,
     )
 
 
@@ -210,7 +210,7 @@ def update_pr(c: Context):
     else:
         open_web = input("Open in browser? [y/n] ")
         if "y" in open_web.lower():
-            c.run("gh pr view --web", pty=True)
+            c.run("gh pr view --web", pty=NOT_WINDOWS)
 
 
 def exit_if_error_in_stdout(result: Result):
@@ -237,7 +237,7 @@ def pre_commit(c: Context, auto_fix: bool):
 
     echo_header(f"{msg_type.CLEAN} Running pre-commit checks")
     pre_commit_cmd = "pre-commit run --all-files"
-    result = c.run(pre_commit_cmd, pty=True, warn=True)
+    result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
 
     exit_if_error_in_stdout(result)
 
@@ -350,7 +350,7 @@ def test(
     test_result: Result = c.run(
         tox_command,
         warn=True,
-        pty=True,
+        pty=NOT_WINDOWS,
     )
 
     failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
