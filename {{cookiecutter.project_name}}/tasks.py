@@ -32,49 +32,46 @@ def echo_header(msg: str):
 
 
 class MsgType:
-    @property
-    def is_windows(self) -> bool:
-        return platform.system() == "Windows"
-
+    # Emojis have to be encoded as bytes to not break the terminal on Windows
     @property
     def DOING(self) -> str:
-        return "DOING:" if self.is_windows else b"\xf0\x9f\xa4\x96".decode()
+        return b"\xf0\x9f\xa4\x96".decode() if NOT_WINDOWS else "DOING:"
 
     @property
     def GOOD(self) -> str:
-        return "DONE:" if self.is_windows else b"\xe2\x9c\x85".decode()
+        return b"\xe2\x9c\x85".decode() if NOT_WINDOWS else "DONE:"
 
     @property
     def FAIL(self) -> str:
-        return "FAILED:" if self.is_windows else b"\xf0\x9f\x9a\xa8".decode()
+        return b"\xf0\x9f\x9a\xa8".decode() if NOT_WINDOWS else "FAILED:"
 
     @property
     def WARN(self) -> str:
-        return "WARNING:" if self.is_windows else b"\xf0\x9f\x9a\xa7".decode()
+        return b"\xf0\x9f\x9a\xa7".decode() if NOT_WINDOWS else "WARNING:"
 
     @property
     def SYNC(self) -> str:
-        return "SYNCING:" if self.is_windows else b"\xf0\x9f\x9a\x82".decode()
+        return b"\xf0\x9f\x9a\x82".decode() if NOT_WINDOWS else "SYNCING:"
 
     @property
     def PY(self) -> str:
-        return "" if self.is_windows else b"\xf0\x9f\x90\x8d".decode()
+        return b"\xf0\x9f\x90\x8d".decode() if NOT_WINDOWS else ""
 
     @property
     def CLEAN(self) -> str:
-        return "CLEANING:" if self.is_windows else b"\xf0\x9f\xa7\xb9".decode()
+        return b"\xf0\x9f\xa7\xb9".decode() if NOT_WINDOWS else "CLEANING:"
 
     @property
     def TEST(self) -> str:
-        return "TESTING:" if self.is_windows else b"\xf0\x9f\xa7\xaa".decode()
+        return b"\xf0\x9f\xa7\xaa".decode() if NOT_WINDOWS else "TESTING:"
 
     @property
     def COMMUNICATE(self) -> str:
-        return "COMMUNICATING:" if self.is_windows else b"\xf0\x9f\x93\xa3".decode()
+        return b"\xf0\x9f\x93\xa3".decode() if NOT_WINDOWS else "COMMUNICATING:"
 
     @property
     def EXAMINE(self) -> str:
-        return "VIEWING:" if self.is_windows else b"\xf0\x9f\x94\x8d".decode()
+        return b"\xf0\x9f\x94\x8d".decode() if NOT_WINDOWS else "VIEWING:"
 
 
 msg_type = MsgType()
@@ -249,7 +246,7 @@ def pre_commit(c: Context, auto_fix: bool):
 @task
 def static_type_checks(c: Context):
     echo_header(f"{msg_type.CLEAN} Running static type checks")
-    c.run("pyright .", pty=NOT_WINDOWS)
+    c.run("pyright-polite .", pty=NOT_WINDOWS)
 
 
 @task
@@ -344,7 +341,7 @@ def test_for_rej():
 
 @task
 def lint(c: Context, auto_fix: bool = False):
-    """Lint the project using the pre-commit hooks and mypy."""
+    """Lint the project."""
     test_for_rej()
     pre_commit(c=c, auto_fix=auto_fix)
     static_type_checks(c)
