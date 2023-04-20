@@ -317,9 +317,6 @@ def setup(c: Context, python_path: Optional[str] = None):
         print(
             f"{msg_type.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
         )
-        print(
-            f"{msg_type.DOING} Then install the project by running: \n\n\t\t inv install\n",
-        )
 
 
 @task
