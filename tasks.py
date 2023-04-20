@@ -80,3 +80,4 @@ def pr(c: Context):
     """Create a pull request on GitHub."""
     lint(c)
     test(c)
+    c.run("gh pr create -w")
