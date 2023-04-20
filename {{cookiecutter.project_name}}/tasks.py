@@ -263,14 +263,8 @@ def install(
     extras = ".[dev,tests,docs]" if NOT_WINDOWS else ".[dev,tests,docs]"
     install_cmd = f"pip install -e {extras} {pip_args}"
 
-    venv_cmd = (
-        f"source {venv_path}/bin/activate"
-        if NOT_WINDOWS
-        else f"{venv_path}/Scripts/activate"
-    )
-
-    if venv_path is not None:
-        with c.prefix(venv_cmd):
+    if venv_path is not None and NOT_WINDOWS:
+        with c.prefix(f"source {venv_path}/bin/activate"):
             c.run(install_cmd)
             return
 
