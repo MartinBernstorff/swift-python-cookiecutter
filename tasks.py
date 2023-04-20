@@ -77,3 +77,4 @@ def pr(c: Context):
     """Create a pull request on GitHub."""
     lint(c)
     test_instantiation(c)
+    c.run("git push origin main")
