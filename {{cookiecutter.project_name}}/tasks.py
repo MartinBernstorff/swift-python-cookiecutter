@@ -279,7 +279,7 @@ def get_python_path(preferred_version: str) -> Optional[str]:
         return preferred_version_path
 
     print(
-        f"{msg_type.WARN}: python{preferred_version} not found, continuing with default python version"
+        f"{msg_type.WARN}: python{preferred_version} not found, continuing with default python version",
     )
     return shutil.which("python")
 
