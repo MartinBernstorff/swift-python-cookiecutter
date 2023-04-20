@@ -45,7 +45,7 @@ def test_instantiation(c: Context):
 
 @task
 def lint(c):
-    c.run("black . --line-length 1000")
+    c.run("black .")
     c.run("ruff check . --isolated --fix --line-length=1000")
     # --isolated to ignore pyproject.toml with cookiecutter placeholders, which are not valid TOML
 
