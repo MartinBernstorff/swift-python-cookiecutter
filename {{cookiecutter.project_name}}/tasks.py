@@ -277,7 +277,7 @@ def install(
     c.run(install_cmd)
 
 
-def get_python_path(preferred_version: str) -> str | None:
+def get_python_path(preferred_version: str) -> Optional[str]:
     """Get path to python executable."""
     preferred_version_path = shutil.which(f"python{preferred_version}")
 
