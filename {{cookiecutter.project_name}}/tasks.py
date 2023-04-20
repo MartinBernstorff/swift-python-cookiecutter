@@ -266,7 +266,7 @@ def install(
     venv_cmd = (
         f"source {venv_path}/bin/activate"
         if NOT_WINDOWS
-        else f"source {venv_path}/Scripts/activate"
+        else f"{venv_path}/Scripts/activate"
     )
 
     if venv_path is not None:
