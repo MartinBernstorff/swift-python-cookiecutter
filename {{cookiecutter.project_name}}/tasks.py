@@ -92,14 +92,14 @@ def git_init(c: Context, branch: str = "main"):
 
 def setup_venv(
     c: Context,
-    python: str,
+    python_path: str,
     venv_name: Optional[str] = None,
 ) -> str:
     """Create a virtual environment if it does not exist yet.
 
     Args:
         c: The invoke context.
-        python: The python executable to use.
+        python_path: The python executable to use.
         venv_name: The name of the virtual environment. Defaults to ".venv".
     """
     if venv_name is None:
@@ -107,9 +107,9 @@ def setup_venv(
 
     if not Path(venv_name).exists():
         echo_header(
-            f"{msg_type.DOING} Creating virtual environment using {msg_type.PY}:{python}",
+            f"{msg_type.DOING} Creating virtual environment using {msg_type.PY}:{python_path}",
         )
-        c.run(f"{python} -m venv {venv_name}")
+        c.run(f"{python_path} -m venv {venv_name}")
         print(f"{msg_type.GOOD} Virtual environment created")
     else:
         print(f"{msg_type.GOOD} Virtual environment already exists")
@@ -250,41 +250,63 @@ def static_type_checks(c: Context):
 
 
 @task
-def install(c: Context, pip_args: str = "", msg: bool = True):
+def install(
+    c: Context,
+    pip_args: str = "",
+    msg: bool = True,
+    venv_path: Optional[str] = None,
+):
     """Install the project in editable mode using pip install"""
     if msg:
         echo_header(f"{msg_type.DOING} Installing project")
 
-    if NOT_WINDOWS:
-        c.run(f"pip install -e '.[dev,tests,docs]' {pip_args}")
-    else:
-        c.run(f"pip install -e .[dev,tests,docs] {pip_args}")
+    extras = ".[dev,tests,docs]" if NOT_WINDOWS else ".[dev,tests,docs]"
+    install_cmd = f"pip install -e {extras} {pip_args}"
+
+    if venv_path is not None and NOT_WINDOWS:
+        with c.prefix(f"source {venv_path}/bin/activate"):
+            c.run(install_cmd)
+            return
+
+    c.run(install_cmd)
+
+
+def get_python_path(preferred_version: str) -> Optional[str]:
+    """Get path to python executable."""
+    preferred_version_path = shutil.which(f"python{preferred_version}")
+
+    if preferred_version_path is not None:
+        return preferred_version_path
+
+    print(
+        f"{msg_type.WARN}: python{preferred_version} not found, continuing with default python version",
+    )
+    return shutil.which("python")
 
 
 @task
-def setup(c: Context, python: Optional[str] = None):
+def setup(c: Context, python_path: Optional[str] = None):
     """Confirm that a git repo exists and setup a virtual environment.
 
     Args:
         c: Invoke context
-        python: Path to the python executable to use for the virtual environment. Uses the currently active python if none are specified.
+        python_path: Path to the python executable to use for the virtual environment. Uses the return value of `which python` if not provided.
     """
     git_init(c)
 
-    if python is None:
+    if python_path is None:
         # get path to python executable
-        python = shutil.which("python")
-        if not python:
+        python_path = get_python_path(preferred_version="3.9")
+        if not python_path:
             print(f"{msg_type.FAIL} Python executable not found")
             exit(1)
-    venv_name = setup_venv(c, python=python)
+    venv_name = setup_venv(c, python_path=python_path)
+
+    install(c, pip_args="--upgrade", msg=False, venv_path=venv_name)
 
     if venv_name is not None:
         print(
             f"{msg_type.DOING} Activate your virtual environment by running: \n\n\t\t source {venv_name}/bin/activate \n",
-        )
-        print(
-            f"{msg_type.DOING} Then install the project by running: \n\n\t\t inv install\n",
         )
 
 
