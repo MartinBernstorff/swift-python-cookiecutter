@@ -287,10 +287,7 @@ def get_python_path(preferred_version: str) -> Optional[str]:
     print(
         f"{msg_type.WARN}: python{preferred_version} not found, continuing with default python version"
     )
-
-    if "y" in prompt.lower():
-        return shutil.which("python")
-    exit(1)
+    return shutil.which("python")
 
 
 @task
