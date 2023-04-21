@@ -21,7 +21,7 @@ import re
 import shutil
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from invoke import Context, Result, task
 
@@ -327,39 +327,44 @@ def update(c: Context):
     install(c, pip_args="--upgrade", msg=False)
 
 
-@task
+@task(iterable="pytest_args")
 def test(
     c: Context,
-    python_versions: Sequence[str] = [SUPPORTED_PYTHON_VERSIONS[0]],
+    python_versions: List[str] = ["3.9"],
+    pytest_args: List[str] = [],  # noqa
 ):
     """Run tests"""
-    # Weird default for python_versions is for invoke to infer that python-versions
-    # is an iterable. Default has to be a string, tuples are not supported.
     echo_header(f"{msg_type.TEST} Running tests")
 
-    pytest_flags = "-n auto -rfE --failed-first -p no:cov --disable-warnings -q"
-    run_mode = "p" if len(python_versions) > 1 else "r"
+    if len(pytest_args) == 0:
+        pytest_args = [
+            "-n auto",
+            "-rfE",
+            "--failed-first",
+            "-p no:cov",
+            "--disable-warnings",
+            "-q",
+        ]
 
-    tox_py_envs = [f"py{v}".replace(".", "") for v in python_versions]
-    tox_env_arg_string = ",".join(tox_py_envs)
-    # Remove period so that the input can be e.g. 3.9 like other functions, while
-    # tox receives the required 39
+    pytest_arg_str = " ".join(pytest_args)
 
-    tox_command = f"tox {run_mode} -e {tox_env_arg_string} -- {pytest_flags}"
+    python_version_strings = [f"py{v.replace('.', '')}" for v in python_versions]
+    python_version_arg_string = ",".join(python_version_strings)
 
     test_result: Result = c.run(
-        tox_command,
+        f"tox -e {python_version_arg_string} -- {pytest_arg_str}",
         warn=True,
-        pty=NOT_WINDOWS,
+        pty=True,
     )
 
+    # If "failed" in the pytest results
     failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
 
     if len(failed_tests) > 0:
         print("\n\n\n")
         echo_header("Failed tests")
-
-        # Get lines with "FAILED" in them from the .pytest_results file
+        print("\n\n\n")
+        echo_header("Failed tests")
 
         for line in failed_tests:
             # Remove from start of line until /test_
