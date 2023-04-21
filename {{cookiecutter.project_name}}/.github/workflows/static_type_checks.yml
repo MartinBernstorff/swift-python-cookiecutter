@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             .tox
-          key: ${{ runner.os }}-${{ matrix.python-version }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-static-type-checks
 
       - name: Set up Python
         uses: actions/setup-python@v4

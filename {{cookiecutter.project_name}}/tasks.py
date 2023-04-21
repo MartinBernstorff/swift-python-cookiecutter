@@ -417,7 +417,8 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     """
     if not view_only:
         echo_header(f"{msg_type.DOING}: Building docs")
-        c.run("sphinx-build -b html docs docs/_build/html")
+        c.run("tox -e docs")
+
     if view or view_only:
         echo_header(f"{msg_type.EXAMINE}: Opening docs in browser")
         # check the OS and open the docs in the browser
