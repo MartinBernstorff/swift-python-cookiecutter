@@ -330,11 +330,16 @@ def update(c: Context):
 @task(iterable="pytest_args")
 def test(
     c: Context,
-    python_versions: List[str] = ["3.9"],
+    python_versions: List[str] = (SUPPORTED_PYTHON_VERSIONS[0]),  # noqa # type: ignore
     pytest_args: List[str] = [],  # noqa
 ):
     """Run tests"""
+    # Invoke requires lists as type hints, but does not support lists as default arguments.
+    # Hence this super weird type hint and default argument for the python_versions arg.
     echo_header(f"{msg_type.TEST} Running tests")
+
+    python_version_strings = [f"py{v.replace('.', '')}" for v in python_versions]
+    python_version_arg_string = ",".join(python_version_strings)
 
     if len(pytest_args) == 0:
         pytest_args = [
@@ -347,9 +352,6 @@ def test(
         ]
 
     pytest_arg_str = " ".join(pytest_args)
-
-    python_version_strings = [f"py{v.replace('.', '')}" for v in python_versions]
-    python_version_arg_string = ",".join(python_version_strings)
 
     test_result: Result = c.run(
         f"tox -e {python_version_arg_string} -- {pytest_arg_str}",
