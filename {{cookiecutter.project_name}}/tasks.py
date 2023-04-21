@@ -330,7 +330,7 @@ def update(c: Context):
 @task(iterable="pytest_args")
 def test(
     c: Context,
-    python_versions: List[str] = (SUPPORTED_PYTHON_VERSIONS[0]),  # noqa # type: ignore
+    python_versions: List[str] = (SUPPORTED_PYTHON_VERSIONS[0],),  # noqa # type: ignore
     pytest_args: List[str] = [],  # noqa
 ):
     """Run tests"""
