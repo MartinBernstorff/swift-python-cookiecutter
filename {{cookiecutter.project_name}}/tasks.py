@@ -19,7 +19,6 @@ If you do not wish to use invoke you can simply delete this file.
 import platform
 import re
 import shutil
-from collections.abc import Sequence
 from pathlib import Path
 from typing import List, Optional
 
