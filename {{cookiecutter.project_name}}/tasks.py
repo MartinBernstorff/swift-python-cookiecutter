@@ -355,7 +355,7 @@ def test(
     test_result: Result = c.run(
         f"tox -e {python_version_arg_string} -- {pytest_arg_str}",
         warn=True,
-        pty=True,
+        pty=NOT_WINDOWS,
     )
 
     # If "failed" in the pytest results
