@@ -173,4 +173,10 @@ description: run unit tests
 extras = tests
 commands =
   pytest {posargs:tests}
+
+[testenv:type]
+description: run type checks
+extras = dev
+commands =
+  pyright-plight {posargs:src tests}
 """
