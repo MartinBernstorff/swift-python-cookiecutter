@@ -171,12 +171,15 @@ envlist = py{39,310}
 [testenv]
 description: run unit tests
 extras = tests
+use_develop = true
 commands =
-  pytest {posargs:tests}
+  pytest -n auto
 
 [testenv:type]
 description: run type checks
-extras = dev
+extras = test, dev
+basepython = py39
+use_develop = true
 commands =
-  pyright-plight {posargs:src tests}
+  pyright-polite .
 """
