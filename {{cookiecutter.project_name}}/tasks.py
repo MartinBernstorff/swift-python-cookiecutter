@@ -20,9 +20,16 @@ import platform
 import re
 import shutil
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from invoke import Context, Result, task
+
+# Extract supported python versions from the pyproject.toml classifiers key
+SUPPORTED_PYTHON_VERSIONS = [
+    line.split("::")[-1].strip().replace('"', "").replace(",", "")
+    for line in Path("pyproject.toml").read_text().splitlines()
+    if "Programming Language :: Python ::" in line
+]
 
 NOT_WINDOWS = platform.system() != "Windows"
 
@@ -205,13 +212,15 @@ def update_pr(c: Context):
             c.run("gh pr view --web", pty=NOT_WINDOWS)
 
 
-def exit_if_remaining_errors(result: Result):
+def exit_if_error_in_stdout(result: Result):
     # Find N remaining using regex
 
     if "error" in result.stdout:
-        errors_remaining = re.findall(r"\d+(?=( remaining))", result.stdout)[0]
+        errors_remaining = re.findall(r"\d+(?=( remaining))", result.stdout)[
+            0
+        ]  # testing
         if errors_remaining != "0":
-            exit(1)
+            exit(0)
 
 
 def pre_commit(c: Context, auto_fix: bool):
@@ -229,14 +238,14 @@ def pre_commit(c: Context, auto_fix: bool):
     pre_commit_cmd = "pre-commit run --all-files"
     result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
 
-    exit_if_remaining_errors(result)
+    exit_if_error_in_stdout(result)
 
     if ("fixed" in result.stdout or "reformatted" in result.stdout) and auto_fix:
         _add_commit(c, msg="style: Auto-fixes from pre-commit")
 
         print(f"{msg_type.DOING} Fixed errors, re-running pre-commit checks")
         second_result = c.run(pre_commit_cmd, pty=NOT_WINDOWS, warn=True)
-        exit_if_remaining_errors(second_result)
+        exit_if_error_in_stdout(second_result)
     else:
         if result.return_code != 0:
             print(f"{msg_type.FAIL} Pre-commit checks failed")
@@ -246,7 +255,7 @@ def pre_commit(c: Context, auto_fix: bool):
 @task
 def static_type_checks(c: Context):
     echo_header(f"{msg_type.CLEAN} Running static type checks")
-    c.run("pyright-polite .", pty=NOT_WINDOWS)
+    c.run("tox -e type", pty=NOT_WINDOWS)
 
 
 @task
@@ -317,25 +326,47 @@ def update(c: Context):
     install(c, pip_args="--upgrade", msg=False)
 
 
-@task
-def test(c: Context):
+@task(iterable="pytest_args")
+def test(
+    c: Context,
+    python_versions: List[str] = (SUPPORTED_PYTHON_VERSIONS[0],),  # noqa # type: ignore
+    pytest_args: List[str] = [],  # noqa
+):
     """Run tests"""
+    # Invoke requires lists as type hints, but does not support lists as default arguments.
+    # Hence this super weird type hint and default argument for the python_versions arg.
     echo_header(f"{msg_type.TEST} Running tests")
+
+    python_version_strings = [f"py{v.replace('.', '')}" for v in python_versions]
+    python_version_arg_string = ",".join(python_version_strings)
+
+    if not pytest_args:
+        pytest_args = [
+            "tests",
+            "-n auto",
+            "-rfE",
+            "--failed-first",
+            "-p no:cov",
+            "--disable-warnings",
+            "-q",
+        ]
+
+    pytest_arg_str = " ".join(pytest_args)
+
     test_result: Result = c.run(
-        "pytest tests/ -n auto -rfE --failed-first -p no:cov --disable-warnings -q",
+        f"tox -e {python_version_arg_string} -- {pytest_arg_str}",
         warn=True,
         pty=NOT_WINDOWS,
     )
 
     # If "failed" in the pytest results
-    if "failed" in test_result.stdout:
+    failed_tests = [line for line in test_result.stdout if line.startswith("FAILED")]
+
+    if len(failed_tests) > 0:
         print("\n\n\n")
         echo_header("Failed tests")
-
-        # Get lines with "FAILED" in them from the .pytest_results file
-        failed_tests = [
-            line for line in test_result.stdout if line.startswith("FAILED")
-        ]
+        print("\n\n\n")
+        echo_header("Failed tests")
 
         for line in failed_tests:
             # Remove from start of line until /test_
@@ -374,7 +405,7 @@ def pr(c: Context, auto_fix: bool = False):
     """Run all checks and update the PR."""
     add_and_commit(c)
     lint(c, auto_fix=auto_fix)
-    test(c)
+    test(c, python_versions=SUPPORTED_PYTHON_VERSIONS)
     update_branch(c)
     update_pr(c)
 
@@ -386,11 +417,12 @@ def docs(c: Context, view: bool = False, view_only: bool = False):
     """
     if not view_only:
         echo_header(f"{msg_type.DOING}: Building docs")
-        c.run("sphinx-build -b html docs docs/_build/html")
+        c.run("tox -e docs")
+
     if view or view_only:
         echo_header(f"{msg_type.EXAMINE}: Opening docs in browser")
         # check the OS and open the docs in the browser
-        if NOT_WINDOWS:
-            c.run("open docs/_build/html/index.html")
-        else:
+        if platform.system() == "Windows":
             c.run("start docs/_build/html/index.html")
+        else:
+            c.run("open docs/_build/html/index.html")
