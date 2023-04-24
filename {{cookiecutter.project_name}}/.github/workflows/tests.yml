@@ -51,7 +51,9 @@ jobs:
       - name: Run and write pytest
         shell: bash
         run: |
-          inv test --pytest-args="--durations=0" --pytest-args="--junitxml=pytest.xml --cov-report=term-missing --cov=src/ tests/"
+          # Specifying two sets of "--pytest-args" is required for invoke to parse it as a list
+          inv test --pytest-args="--durations=0" --pytest-args="--junitxml=pytest.xml --cov-report=term-missing --cov=src/"
+          
 
       - name: Test report on failures
         uses: EnricoMi/publish-unit-test-result-action@v2
