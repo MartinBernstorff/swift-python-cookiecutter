@@ -40,7 +40,7 @@ def cruft_create(c: Context):
 
 
 @task
-def test_instantiation(c: Context):
+def test(c: Context):
     """Test that the project can be instantiated."""
     if new_instance_dir.exists():
         shutil.rmtree(new_instance_dir)
@@ -79,4 +79,5 @@ def lint(c: Context):
 def pr(c: Context):
     """Create a pull request on GitHub."""
     lint(c)
-    test_instantiation(c)
+    test(c)
+    c.run("gh pr create -w")
