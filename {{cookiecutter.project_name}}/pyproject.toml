@@ -173,7 +173,7 @@ description: run unit tests
 extras = tests
 use_develop = true
 commands =
-  pytest -n auto
+  pytest -n auto {posargs:test}
 
 [testenv:type]
 description: run type checks
