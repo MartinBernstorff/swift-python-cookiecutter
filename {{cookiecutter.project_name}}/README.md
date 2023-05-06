@@ -29,6 +29,9 @@ You can install `{{cookiecutter.project_name}}` via [pip] from [PyPI]:
 pip install {{cookiecutter.project_name}}
 ```
 
+[pip]: https://pip.pypa.io/en/stable/installing/
+[PyPI]: https://pypi.org/project/cuecy/
+
 ## Usage
 
 TODO: Add minimal usage example
