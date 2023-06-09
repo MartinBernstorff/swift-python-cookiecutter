@@ -43,7 +43,7 @@ To see the recommended setup for the repository, see the following file:
 ## Examples
 Examples of projects using this template
 
-- [psycop-model-evaluation](https://github.com/Aarhus-Psychiatry-Research/psycop-model-evaluation)
+- [The PSYCOP ML in healthcare project](https://github.com/Aarhus-Psychiatry-Research/psycop-common)
 - Martin's [Personal Mnemonic Medium](https://github.com/MartinBernstorff/personal-mnemonic-medium/)
 
 ## Authors
