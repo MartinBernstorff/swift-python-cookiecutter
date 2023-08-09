@@ -16,7 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     concurrency: release
     permissions:
-      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing using PyPI
+      id-token: write  # IMPORTANT: this permission is mandatory for trusted publishing using PyPI 
+      # a guide on how to set it up is available here: https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/
 
 
     if: ${{ github.ref == 'refs/heads/main' && github.event.workflow_run.conclusion == 'success'}}
