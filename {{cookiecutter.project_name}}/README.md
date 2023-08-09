@@ -6,7 +6,6 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/{{cookiecutter.project_name}})][pypi status]
 [![documentation](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions/workflows/documentation.yml/badge.svg)][documentation]
 [![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/actions/workflows/tests.yml/badge.svg)][tests]
-
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
 [pypi status]: https://pypi.org/project/{{cookiecutter.project_name}}/
@@ -30,7 +29,7 @@ pip install {{cookiecutter.project_name}}
 ```
 
 [pip]: https://pip.pypa.io/en/stable/installing/
-[PyPI]: https://pypi.org/project/cuecy/
+[PyPI]: https://pypi.org/project/{{cookiecutter.project_name}}/
 
 ## Usage
 
