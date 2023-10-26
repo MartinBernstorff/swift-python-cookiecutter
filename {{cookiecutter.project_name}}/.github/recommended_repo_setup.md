@@ -37,4 +37,4 @@
      * Require conversation resolution before merging
 
 ### Publishing to PyPI
-If do not wish to pypi, you can just delete the `release.yml` file. If you do wish to publish, you need to setup trusted publishing [here](https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/).
+If do not wish to pypi, you can just delete the `release.yml` file. If you do wish to publish, you need to setup trusted publishing [here](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).
